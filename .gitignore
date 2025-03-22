@@ -1,0 +1,55 @@
+# Archivos Python compilados
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Carpetas de entornos virtuales
+venv/
+.env/
+.venv/
+env/
+ENV/
+
+# Archivos relacionados con VSCode
+.vscode/
+*.code-workspace
+
+# Archivos de configuración y variables de entorno
+*.env
+.env.*
+
+# Archivos de pruebas y cobertura
+.coverage
+coverage.xml
+htmlcov/
+.pytest_cache/
+
+# Logs
+*.log
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos comprimidos y de respaldo
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Dependencias instaladas
+*.egg-info
+dist/
+build/
+eggs/
+
+# Bases de datos locales SQLite
+*.sqlite
+*.db
+
+# Ignorar carpetas de documentación generadas
+docs/_build/
+site/
+
+# Archivos de Jupyter Notebook checkpoints
+.ipynb_checkpoints
