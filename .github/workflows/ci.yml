@@ -2,12 +2,12 @@ name: CI - Tests y Coverage
 
 on:
   push:
-    branches: [develop main]
+    branches: [develop, main]
   pull_request:
-    branches: [develop main]
+    branches: [develop, main]
 
 jobs:
-  test:
+  compras-tests:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,18 +19,114 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: 🛠️ Instalar dependencias
+      - name: 🛠️ Instalar dependencias - Compras
         run: |
           pip install --upgrade pip
           pip install -r compras/requirements.txt
           pip install pytest-cov
 
-      - name: ✅ Ejecutar tests con cobertura
+      - name: ✅ Ejecutar tests con cobertura - Compras
         working-directory: compras
         run: |
-          pytest --cov=app --cov-fail-under=70
+          pytest --cov=src --cov-fail-under=70 tests/
 
-      - name: 📊 Reportar cobertura
+      - name: 📊 Reportar cobertura - Compras
         working-directory: compras
+        env:
+          PYTHONPATH: .
         run: |
           coverage report
+
+  ventas-tests:
+    runs-on: ubuntu-latest
+    needs: compras-tests  
+
+    steps:
+      - name: ⬇️ Checkout código
+        uses: actions/checkout@v3
+
+      - name: 🐍 Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: 🛠️ Instalar dependencias - Ventas
+        run: |
+          pip install --upgrade pip
+          pip install -r ventas/requirements.txt
+          pip install pytest-cov
+
+      - name: ✅ Ejecutar tests con cobertura - Ventas
+        working-directory: ventas
+        env:
+          PYTHONPATH: .
+        run: |
+          pytest --cov=src --cov-fail-under=70 tests/
+
+      - name: 📊 Reportar cobertura - Ventas
+        working-directory: ventas
+        run: |
+          coverage report
+
+  clientes-tests:
+    runs-on: ubuntu-latest
+    needs: ventas-tests 
+
+    steps:
+      - name: ⬇️ Checkout código
+        uses: actions/checkout@v3
+
+      - name: 🐍 Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: 🛠️ Instalar dependencias - Clientes
+        run: |
+          pip install --upgrade pip
+          pip install -r clientes/requirements.txt
+          pip install pytest-cov
+
+      - name: ✅ Ejecutar tests con cobertura - Clientes
+        working-directory: clientes
+        env:
+          PYTHONPATH: .
+        run: |
+          pytest --cov=src --cov-fail-under=70 tests/
+
+      - name: 📊 Reportar cobertura - Clientes
+        working-directory: clientes
+        run: |
+          coverage report
+
+  bodegas-tests:
+    runs-on: ubuntu-latest
+    needs: clientes-tests  
+
+    steps:
+      - name: ⬇️ Checkout código
+        uses: actions/checkout@v3
+
+      - name: 🐍 Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: 🛠️ Instalar dependencias - Bodegas
+        run: |
+          pip install --upgrade pip
+          pip install -r bodegas/requirements.txt
+          pip install pytest-cov
+
+      - name: ✅ Ejecutar tests con cobertura - Bodegas
+        working-directory: bodegas
+        env:
+          PYTHONPATH: .
+        run: |
+          pytest --cov=src --cov-fail-under=70 tests/
+
+      - name: 📊 Reportar cobertura - Bodegas
+        working-directory: bodegas
+        run: |
+          coverage report
+
