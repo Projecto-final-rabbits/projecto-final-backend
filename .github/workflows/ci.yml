@@ -32,6 +32,8 @@ jobs:
 
       - name: 📊 Reportar cobertura - Compras
         working-directory: compras
+        env:
+          PYTHONPATH: ${{ github.workspace }}/compras
         run: |
           coverage report
 
@@ -56,6 +58,8 @@ jobs:
 
       - name: ✅ Ejecutar tests con cobertura - Ventas
         working-directory: ventas
+        env:
+          PYTHONPATH: ${{ github.workspace }}/ventas
         run: |
           pytest --cov=src --cov-fail-under=70 tests/
 
