@@ -16,3 +16,19 @@ services:
     ports:
       - "8001:8001"
     restart: unless-stopped
+
+  clientes:
+    build:
+      context: ./clientes
+    container_name: clientes_service
+    ports:
+      - "8002:8002"
+    restart: unless-stopped
+
+  bodegas:
+    build:
+      context: ./bodegas
+    container_name: bodegas_service
+    ports:
+      - "8003:8003"
+    restart: unless-stopped
