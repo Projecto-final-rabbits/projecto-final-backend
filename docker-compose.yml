@@ -8,3 +8,11 @@ services:
     ports:
       - "8000:8000"
     restart: unless-stopped
+
+  ventas:
+    build:
+      context: ./ventas
+    container_name: ventas_service
+    ports:
+      - "8001:8001"
+    restart: unless-stopped
