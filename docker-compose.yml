@@ -2,33 +2,49 @@ version: "3.9"
 
 services:
   compras:
+    profiles: [compras, all]
     build:
       context: ./compras
     container_name: compras_service
     ports:
       - "8000:8000"
+    volumes:
+      - ./compras/src:/app/src
+    command: uvicorn src.infrastructure.api.main:app --host 0.0.0.0 --port 8000 --reload
     restart: unless-stopped
 
   ventas:
+    profiles: [ventas, all]
     build:
       context: ./ventas
     container_name: ventas_service
     ports:
       - "8001:8001"
+    volumes: 
+      - ./ventas/src:/app/src
+    command: uvicorn src.infrastructure.api.main:app --host 0.0.0.0 --port 8001 --reload
     restart: unless-stopped
 
   clientes:
+    profiles: [clientes, all]
     build:
       context: ./clientes
     container_name: clientes_service
     ports:
       - "8002:8002"
+    volumes: 
+      - ./clientes/src:/app/src
+    command: uvicorn src.infrastructure.api.main:app --host 0.0.0.0 --port 8002 --reload
     restart: unless-stopped
 
   bodegas:
+    profiles: [bodegas, all]
     build:
       context: ./bodegas
     container_name: bodegas_service
     ports:
       - "8003:8003"
+    volumes: 
+      - ./bodegas/src:/app/src
+    command: uvicorn src.infrastructure.api.main:app --host 0.0.0.0 --port 8003 --reload
     restart: unless-stopped
