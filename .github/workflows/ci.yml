@@ -93,6 +93,7 @@ jobs:
           docker push $IMAGE
 
   ventas-tests:
+    name: 🧪 Ventas - Tests
     runs-on: ubuntu-latest
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.ventas-changes == 'true' }}
@@ -125,6 +126,7 @@ jobs:
           coverage report
 
   ventas-build:
+    name: 🐳 Ventas - Build & Push Docker
     runs-on: ubuntu-latest
     needs: ventas-tests
 
@@ -149,6 +151,7 @@ jobs:
           docker push $IMAGE
 
   clientes-tests:
+    name: 🧪 Clientes - Tests
     runs-on: ubuntu-latest
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.clientes-changes == 'true' }}
@@ -181,6 +184,7 @@ jobs:
           coverage report
 
   clientes-build:
+    name: 🐳 Clientes - Build & Push Docker
     runs-on: ubuntu-latest
     needs: clientes-tests
 
@@ -205,6 +209,7 @@ jobs:
           docker push $IMAGE
 
   bodegas-tests:
+    name: 🧪 Bodegas - Tests
     runs-on: ubuntu-latest
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.bodegas-changes == 'true' }}
@@ -237,6 +242,7 @@ jobs:
           coverage report
 
   bodegas-build:
+    name: 🐳 Bodegas - Build & Push Docker
     runs-on: ubuntu-latest
     needs: bodegas-tests
 
