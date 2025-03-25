@@ -23,7 +23,7 @@ jobs:
         id: filter
         uses: dorny/paths-filter@v2
         with:
-          base: origin/cd
+          base: origin/develop
           filters: |
             compras-changes:
               - 'compras/**'
