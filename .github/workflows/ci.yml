@@ -24,10 +24,14 @@ jobs:
         uses: dorny/paths-filter@v2
         with:
           filters: |
-            compras/*
-            ventas/*
-            clientes/*
-            bodegas/*
+            compras-changes:
+              - 'compras/**'
+            ventas-changes:
+              - 'ventas/**'
+            clientes-changes:
+              - 'clientes/**'
+            bodegas-changes:
+              - 'bodegas/**'
 
   compras-tests:
     runs-on: ubuntu-latest
