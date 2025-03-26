@@ -7,7 +7,7 @@ app = FastAPI()
 def healthcheck():
     return JSONResponse(content={"message": "OK"}, status_code=200)
 
-@app.get("/test1")
+@app.get("/test2")
 def healthcheck():
     return JSONResponse(content={"message": "OK"}, status_code=200)
 

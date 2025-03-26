@@ -118,7 +118,8 @@ jobs:
             --image=us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/final-project/compras:development \
             --platform=managed \
             --region=us-central1 \
-            --allow-unauthenticated
+            --allow-unauthenticated \
+            --port=8000
 
   ventas-tests:
     name: 🧪 Ventas - Tests
@@ -204,7 +205,8 @@ jobs:
             --image=us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/final-project/ventas:development \
             --platform=managed \
             --region=us-central1 \
-            --allow-unauthenticated
+            --allow-unauthenticated \
+            --port=8001
 
   clientes-tests:
     name: 🧪 Clientes - Tests
@@ -290,7 +292,8 @@ jobs:
             --image=us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/final-project/clientes:development \
             --platform=managed \
             --region=us-central1 \
-            --allow-unauthenticated
+            --allow-unauthenticated \
+            --port=8002
 
   bodegas-tests:
     name: 🧪 Bodegas - Tests
@@ -376,4 +379,5 @@ jobs:
             --image=us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/final-project/bodegas:development \
             --platform=managed \
             --region=us-central1 \
-            --allow-unauthenticated
+            --allow-unauthenticated \
+            --port=8003
