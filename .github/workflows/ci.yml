@@ -67,10 +67,11 @@ jobs:
         run: |
           coverage report
 
-  compras-build:
+  compras-build-dev:
     name: 🐳 Compras - Build & Push Docker
     runs-on: ubuntu-latest
     needs: compras-tests
+    if: github.ref == 'refs/heads/develop'
 
     steps:
       - name: ⬇️ Checkout código
@@ -125,10 +126,11 @@ jobs:
         run: |
           coverage report
 
-  ventas-build:
+  ventas-build-dev:
     name: 🐳 Ventas - Build & Push Docker
     runs-on: ubuntu-latest
     needs: ventas-tests
+    if: github.ref == 'refs/heads/develop'
 
     steps:
       - name: ⬇️ Checkout código
@@ -183,10 +185,11 @@ jobs:
         run: |
           coverage report
 
-  clientes-build:
+  clientes-build-dev:
     name: 🐳 Clientes - Build & Push Docker
     runs-on: ubuntu-latest
     needs: clientes-tests
+    if: github.ref == 'refs/heads/develop'
 
     steps:
       - name: ⬇️ Checkout código
@@ -241,10 +244,11 @@ jobs:
         run: |
           coverage report
 
-  bodegas-build:
+  bodegas-build-dev:
     name: 🐳 Bodegas - Build & Push Docker
     runs-on: ubuntu-latest
     needs: bodegas-tests
+    if: github.ref == 'refs/heads/develop'
 
     steps:
       - name: ⬇️ Checkout código
