@@ -7,9 +7,6 @@ app = FastAPI()
 def healthcheck():
     return JSONResponse(content={"message": "OK"}, status_code=200)
 
-@app.get("/test")
-def healthcheck():
-    return JSONResponse(content={"message": "OK"}, status_code=200)
 
 if __name__ == "__main__":
     import uvicorn
