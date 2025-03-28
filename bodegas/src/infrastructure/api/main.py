@@ -8,7 +8,7 @@ def healthcheck():
     return JSONResponse(content={"message": "OK"}, status_code=200)
 
 @app.get("/test2")
-def healthcheck():
+def test2_healthcheck():
     return JSONResponse(content={"message": "OK"}, status_code=200)
 
 if __name__ == "__main__":
