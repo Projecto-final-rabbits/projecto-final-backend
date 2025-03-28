@@ -87,6 +87,9 @@ jobs:
 
       - name: 🔐 Configurar GCP
         uses: ./.github/actions/setup-gcp
+        with:
+          gcp_credentials: ${{ secrets.GCP_APPLICATION_CREDENTIALS }}
+          gcp_project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: 🐳 Construir y subir imagen Docker - Compras
         env:
@@ -109,6 +112,9 @@ jobs:
 
       - name: 🔐 Configurar GCP
         uses: ./.github/actions/setup-gcp
+        with:
+          gcp_credentials: ${{ secrets.GCP_APPLICATION_CREDENTIALS }}
+          gcp_project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: 🚀 Desplegar imagen Docker - Compras
         env:
@@ -166,6 +172,9 @@ jobs:
 
       - name: 🔐 Configurar GCP
         uses: ./.github/actions/setup-gcp
+        with:
+          gcp_credentials: ${{ secrets.GCP_APPLICATION_CREDENTIALS }}
+          gcp_project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: 🐳 Construir y subir imagen Docker - Ventas
         env:
@@ -188,6 +197,9 @@ jobs:
 
       - name: 🔐 Configurar GCP
         uses: ./.github/actions/setup-gcp
+        with:
+          gcp_credentials: ${{ secrets.GCP_APPLICATION_CREDENTIALS }}
+          gcp_project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: 🚀 Desplegar imagen Docker - Ventas
         env:
@@ -245,6 +257,9 @@ jobs:
 
       - name: 🔐 Configurar GCP
         uses: ./.github/actions/setup-gcp
+        with:
+          gcp_credentials: ${{ secrets.GCP_APPLICATION_CREDENTIALS }}
+          gcp_project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: 🐳 Construir y subir imagen Docker - Clientes
         env:
@@ -267,6 +282,9 @@ jobs:
 
       - name: 🔐 Configurar GCP
         uses: ./.github/actions/setup-gcp
+        with:
+          gcp_credentials: ${{ secrets.GCP_APPLICATION_CREDENTIALS }}
+          gcp_project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: 🚀 Desplegar imagen Docker - Clientes
         env:
@@ -324,6 +342,9 @@ jobs:
 
       - name: 🔐 Configurar GCP
         uses: ./.github/actions/setup-gcp
+        with:
+          gcp_credentials: ${{ secrets.GCP_APPLICATION_CREDENTIALS }}
+          gcp_project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: 🐳 Construir y subir imagen Docker - Bodegas
         env:
@@ -346,6 +367,9 @@ jobs:
 
       - name: 🔐 Configurar GCP
         uses: ./.github/actions/setup-gcp
+        with:
+          gcp_credentials: ${{ secrets.GCP_APPLICATION_CREDENTIALS }}
+          gcp_project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: 🚀 Desplegar imagen Docker - Bodegas
         env:
