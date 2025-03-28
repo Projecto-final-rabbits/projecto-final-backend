@@ -1,4 +1,4 @@
-name: CI - Tests y Coverage
+name: CI - CD
 
 on:
   push:
@@ -49,6 +49,14 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: 📦 Cache pip dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('compras/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       - name: 🛠️ Instalar dependencias - Compras
         run: |
           pip install --upgrade pip
@@ -77,12 +85,8 @@ jobs:
       - name: ⬇️ Checkout código
         uses: actions/checkout@v3
 
-      - name: 🔧 Instalar gcloud cli
-        uses: google-github-actions/setup-gcloud@v0.2.0
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_APPLICATION_CREDENTIALS }}
-          export_default_credentials: true
+      - name: 🔐 Configurar GCP
+        uses: ./.github/actions/setup-gcp
 
       - name: 🐳 Construir y subir imagen Docker - Compras
         env:
@@ -103,12 +107,8 @@ jobs:
       - name: ⬇️ Checkout código
         uses: actions/checkout@v3
 
-      - name: 🔧 Instalar gcloud cli
-        uses: google-github-actions/setup-gcloud@v0.2.0
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_APPLICATION_CREDENTIALS }}
-          export_default_credentials: true
+      - name: 🔐 Configurar GCP
+        uses: ./.github/actions/setup-gcp
 
       - name: 🚀 Desplegar imagen Docker - Compras
         env:
@@ -164,12 +164,8 @@ jobs:
       - name: ⬇️ Checkout código
         uses: actions/checkout@v3
 
-      - name: 🔧 Instalar gcloud cli
-        uses: google-github-actions/setup-gcloud@v0.2.0
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_APPLICATION_CREDENTIALS }}
-          export_default_credentials: true
+      - name: 🔐 Configurar GCP
+        uses: ./.github/actions/setup-gcp
 
       - name: 🐳 Construir y subir imagen Docker - Ventas
         env:
@@ -190,12 +186,8 @@ jobs:
       - name: ⬇️ Checkout código
         uses: actions/checkout@v3
 
-      - name: 🔧 Instalar gcloud cli
-        uses: google-github-actions/setup-gcloud@v0.2.0
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_APPLICATION_CREDENTIALS }}
-          export_default_credentials: true
+      - name: 🔐 Configurar GCP
+        uses: ./.github/actions/setup-gcp
 
       - name: 🚀 Desplegar imagen Docker - Ventas
         env:
@@ -251,12 +243,8 @@ jobs:
       - name: ⬇️ Checkout código
         uses: actions/checkout@v3
 
-      - name: 🔧 Instalar gcloud cli
-        uses: google-github-actions/setup-gcloud@v0.2.0
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_APPLICATION_CREDENTIALS }}
-          export_default_credentials: true
+      - name: 🔐 Configurar GCP
+        uses: ./.github/actions/setup-gcp
 
       - name: 🐳 Construir y subir imagen Docker - Clientes
         env:
@@ -277,12 +265,8 @@ jobs:
       - name: ⬇️ Checkout código
         uses: actions/checkout@v3
 
-      - name: 🔧 Instalar gcloud cli
-        uses: google-github-actions/setup-gcloud@v0.2.0
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_APPLICATION_CREDENTIALS }}
-          export_default_credentials: true
+      - name: 🔐 Configurar GCP
+        uses: ./.github/actions/setup-gcp
 
       - name: 🚀 Desplegar imagen Docker - Clientes
         env:
@@ -338,12 +322,8 @@ jobs:
       - name: ⬇️ Checkout código
         uses: actions/checkout@v3
 
-      - name: 🔧 Instalar gcloud cli
-        uses: google-github-actions/setup-gcloud@v0.2.0
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_APPLICATION_CREDENTIALS }}
-          export_default_credentials: true
+      - name: 🔐 Configurar GCP
+        uses: ./.github/actions/setup-gcp
 
       - name: 🐳 Construir y subir imagen Docker - Bodegas
         env:
@@ -364,12 +344,8 @@ jobs:
       - name: ⬇️ Checkout código
         uses: actions/checkout@v3
 
-      - name: 🔧 Instalar gcloud cli
-        uses: google-github-actions/setup-gcloud@v0.2.0
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_APPLICATION_CREDENTIALS }}
-          export_default_credentials: true
+      - name: 🔐 Configurar GCP
+        uses: ./.github/actions/setup-gcp
 
       - name: 🚀 Desplegar imagen Docker - Bodegas
         env:
