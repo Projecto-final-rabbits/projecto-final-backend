@@ -33,6 +33,6 @@ def listar_compras():
 def healthcheck():
     return JSONResponse(content={"message": "OK"}, status_code=200)
 
-@router.get("/test")
-def healthcheck():
+@router.get("/test2")
+def test_healthcheck():
     return JSONResponse(content={"message": "OK"}, status_code=200)
