@@ -135,6 +135,9 @@ jobs:
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.ventas-changes == 'true' }}
 
+    env:
+      TESTING: "true"
+
     steps:
       - name: ⬇️ Checkout código
         uses: actions/checkout@v3
