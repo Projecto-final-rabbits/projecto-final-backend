@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-##load_dotenv()
+load_dotenv()
 
 if os.getenv("TESTING") == "true" or os.getenv("PYTEST_CURRENT_TEST"):
     database_url = "sqlite:///./test.db"
