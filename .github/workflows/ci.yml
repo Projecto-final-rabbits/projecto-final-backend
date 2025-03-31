@@ -128,6 +128,7 @@ jobs:
             --region=us-central1 \
             --allow-unauthenticated \
             --port=8000
+            --set-env-vars=DATABASE_URL=${{ secrets.DATABASE_URL_COMPRAS }}
 
   ventas-tests:
     name: 🧪 Ventas - Tests
@@ -216,6 +217,7 @@ jobs:
             --region=us-central1 \
             --allow-unauthenticated \
             --port=8001
+            --set-env-vars=DATABASE_URL=${{ secrets.DATABASE_URL_VENTAS }}
 
   clientes-tests:
     name: 🧪 Clientes - Tests
