@@ -20,7 +20,7 @@ else:
 
 # Validar que haya URL de conexión en producción
 if not database_url:
-    raise ValueError("DATABASE_URL compras no está definido en el entorno")
+    raise ValueError("DATABASE_URL Compras no está definido en el entorno")
 
 # Crear motor y sesión
 engine = create_engine(database_url, connect_args=connect_args)
