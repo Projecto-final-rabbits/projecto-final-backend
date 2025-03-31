@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-load_dotenv()
+##load_dotenv()
 
 if os.getenv("TESTING") == "true" or os.getenv("PYTEST_CURRENT_TEST"):
     database_url = "sqlite:///./test.db"
@@ -13,7 +13,7 @@ else:
     connect_args = {}
 
 if not database_url:
-    raise ValueError("DATABASE_URL no está definido")
+    raise ValueError("DATABASE_URL Compras no está definido")
 
 engine = create_engine(database_url, connect_args=connect_args)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
