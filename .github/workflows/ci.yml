@@ -127,7 +127,7 @@ jobs:
             --platform=managed \
             --region=us-central1 \
             --allow-unauthenticated \
-            --port=8000
+            --port=8000 \
             --set-env-vars=DATABASE_URL=${{ secrets.DATABASE_URL_COMPRAS }}
 
   ventas-tests:
@@ -216,7 +216,7 @@ jobs:
             --platform=managed \
             --region=us-central1 \
             --allow-unauthenticated \
-            --port=8001
+            --port=8001 \
             --set-env-vars=DATABASE_URL=${{ secrets.DATABASE_URL_VENTAS }}
 
   clientes-tests:
