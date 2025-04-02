@@ -1,6 +1,8 @@
 # Projecto
 cloud-2.json
 
+cloud-key.json
+
 # Archivos Python compilados
 __pycache__/
 *.py[cod]

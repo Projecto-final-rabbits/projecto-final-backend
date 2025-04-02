@@ -8,6 +8,10 @@ from src.application.schemas.bodegas import ProductoCreate, ProductoRead
 from src.infrastructure.adapters.producto_repository_sqlalchemy import ProductoRepository
 from src.application.services.proveedores_service import proveedor_existe
 
+from src.application.services.productos_service import ProductosService
+from src.infrastructure.adapters.out.pubsub_event_publisher import PubsubEventPublisher
+
+
 router = APIRouter(prefix="/productos", tags=["Productos"])
 
 def get_db():
@@ -24,7 +28,13 @@ def crear_producto(producto: ProductoCreate, db: Session = Depends(get_db)):
 
     repo = ProductoRepository(db)
     nuevo = Producto(**producto.dict())
-    return repo.crear(nuevo)
+    creado = repo.crear(nuevo)
+
+    event_publisher = PubsubEventPublisher()
+    productos_service = ProductosService(event_publisher)
+    creado_schema = ProductoRead.from_orm(creado)
+    productos_service.crear_producto(creado_schema.dict())
+    return creado
 
 @router.get("/", response_model=list[ProductoRead])
 def listar_productos(db: Session = Depends(get_db)):
