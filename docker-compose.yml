@@ -36,8 +36,6 @@ services:
       - ./bodegas/src:/app/src
     command: uvicorn src.api.main:app --host 0.0.0.0 --port 8003 --reload
     restart: unless-stopped
-    depends_on:
-      - db
 
   clientes:
     profiles: [clientes, all]
