@@ -9,8 +9,12 @@ load_dotenv("src/.env")
 
 from src.domain.events.event_type import EventType
 
-##gcp_pubsub_credentials = os.getenv("GCP_PUBSUB_CREDENTIALS_PATH")
-credentials = service_account.Credentials.from_service_account_file("secrets/cloud-key-json")
+json_str = os.getenv("cloud-key-json")
+if not json_str:
+    raise RuntimeError("GCP_PUBSUB_CREDENTIALS_PATH is not set")
+
+service_account_info = json.loads(json_str)
+credentials = service_account.Credentials.from_service_account_info(service_account_info)
 publisher = pubsub_v1.PublisherClient(credentials=credentials)
 subscriber = pubsub_v1.SubscriberClient(credentials=credentials)
 
