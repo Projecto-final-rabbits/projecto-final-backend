@@ -9,8 +9,8 @@ load_dotenv("src/.env")
 
 from src.domain.events.event_type import EventType
 
-gcp_pubsub_credentials = os.getenv("GCP_PUBSUB_CREDENTIALS_PATH")
-credentials = service_account.Credentials.from_service_account_file(gcp_pubsub_credentials)
+##gcp_pubsub_credentials = os.getenv("GCP_PUBSUB_CREDENTIALS_PATH")
+credentials = service_account.Credentials.from_service_account_file("secrets/cloud-key-json")
 publisher = pubsub_v1.PublisherClient(credentials=credentials)
 subscriber = pubsub_v1.SubscriberClient(credentials=credentials)
 
