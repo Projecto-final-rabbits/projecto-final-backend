@@ -18,6 +18,7 @@ project_id = os.getenv("CLOUD_PROJECT_ID")
 topic_id = os.getenv("PRODUCT_TOPIC")
 subscription_id = os.getenv("PRODUCT_SELLED_SUB")
 
+
 def publish_message(event_type: EventType, data: dict):
     topic_path = publisher.topic_path(project_id, topic_id)
     data_str = json.dumps(data, default=str)
