@@ -48,19 +48,6 @@ services:
       - ./clientes/src:/app/src
     command: uvicorn src.infrastructure.api.main:app --host 0.0.0.0 --port 8002 --reload
     restart: unless-stopped
-  db:
-    profiles: [db, all]
-    image: postgres:15
-    container_name: db_develop
-    restart: always
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: pass
-      POSTGRES_DB: db-dev
-    ports:
-      - "5432:5432"
-    volumes:
-      - bodegas_pgdata:/var/lib/postgresql/data
 
 volumes:
   bodegas_pgdata:

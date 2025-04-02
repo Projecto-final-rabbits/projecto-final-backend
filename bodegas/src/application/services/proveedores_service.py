@@ -1,6 +1,10 @@
 import httpx
+import os
+from dotenv import load_dotenv
 
-COMPRAS_BASE_URL = "https://compras-135751842587.us-central1.run.app"  # Agregar variable de entorno en github secrets
+load_dotenv("src/.env")
+
+COMPRAS_BASE_URL = os.getenv("COMPRAS_BASE_URL")
 
 def proveedor_existe(proveedor_id: int) -> bool:
     try:
