@@ -388,3 +388,8 @@ jobs:
             --region=us-central1 \
             --allow-unauthenticated \
             --port=8003
+            --set-env-vars=DATABASE_URL=${{ secrets.DATABASE_URL_BODEGAS }}
+            --set-env-vars=CLOUD_PROJECT_ID=${{ secrets.CLOUD_PROJECT_ID }}
+            --set-env-vars=PRODUCT_TOPIC=${{ secrets.PRODUCT_TOPIC }}
+            --set-env-vars=PRODUCT_SELLED_SUB=${{ secrets.PRODUCT_SELLED_SUB }}
+            --update-secrets="cloud-key-json=cloud-key-pubsub:latest"
