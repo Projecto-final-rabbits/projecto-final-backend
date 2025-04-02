@@ -33,7 +33,12 @@ def crear_producto(producto: ProductoCreate, db: Session = Depends(get_db)):
     event_publisher = PubsubEventPublisher()
     productos_service = ProductosService(event_publisher)
     creado_schema = ProductoRead.from_orm(creado)
-    productos_service.crear_producto(creado_schema.dict())
+
+    try:
+        productos_service.crear_producto(creado_schema.dict())
+    except Exception as e:
+        print(f"⚠️ Error al publicar el evento de creación de producto: {e}")
+        
     return creado
 
 @router.get("/", response_model=list[ProductoRead])
