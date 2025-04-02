@@ -1,6 +1,6 @@
 import httpx
 
-COMPRAS_BASE_URL = "http://compras:8000"  # o la URL pública si estás en producción
+COMPRAS_BASE_URL = "https://compras-135751842587.us-central1.run.app"  # Agregar variable de entorno en github secrets
 
 def proveedor_existe(proveedor_id: int) -> bool:
     try:
