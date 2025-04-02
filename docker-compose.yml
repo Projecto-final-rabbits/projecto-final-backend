@@ -12,8 +12,6 @@ services:
       - ./compras/src:/app/src
     command: uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --reload
     restart: unless-stopped
-    # depends_on:
-    #   - db
 
   ventas:
     profiles: [ventas, all]
@@ -26,8 +24,20 @@ services:
       - ./ventas/src:/app/src
     command: uvicorn src.api.main:app --host 0.0.0.0 --port 8001 --reload
     restart: unless-stopped
-    # depends_on:
-    #   - db_ventas
+
+  bodegas:
+    profiles: [bodegas, all]
+    build:
+      context: ./bodegas
+    container_name: bodegas_service
+    ports:
+      - "8003:8003"
+    volumes: 
+      - ./bodegas/src:/app/src
+    command: uvicorn src.api.main:app --host 0.0.0.0 --port 8003 --reload
+    restart: unless-stopped
+    depends_on:
+      - db
 
   clientes:
     profiles: [clientes, all]
@@ -40,19 +50,6 @@ services:
       - ./clientes/src:/app/src
     command: uvicorn src.infrastructure.api.main:app --host 0.0.0.0 --port 8002 --reload
     restart: unless-stopped
-
-  bodegas:
-    profiles: [bodegas, all]
-    build:
-      context: ./bodegas
-    container_name: bodegas_service
-    ports:
-      - "8003:8003"
-    volumes: 
-      - ./bodegas/src:/app/src
-    command: uvicorn src.infrastructure.api.main:app --host 0.0.0.0 --port 8003 --reload
-    restart: unless-stopped
-
   db:
     profiles: [db, all]
     image: postgres:15
@@ -65,22 +62,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - compras_pgdata:/var/lib/postgresql/data
-
-  db_ventas:
-    profiles: [db_ventas, all]
-    image: postgres:15
-    container_name: db_ventas
-    restart: always
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: pass
-      POSTGRES_DB: db_ventas
-    ports:
-      - "5432:5432"
-    volumes:
-      - ventas_pgdata:/var/lib/postgresql/data
+      - bodegas_pgdata:/var/lib/postgresql/data
 
 volumes:
-  compras_pgdata:
-  ventas_pgdata:
+  bodegas_pgdata:

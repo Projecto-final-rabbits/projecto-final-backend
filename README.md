@@ -1,6 +1,6 @@
 # Sistema de Gestión CCP -- projecto-final-backend 
  
-Este repositorio contiene una aplicación con arquitectura hexagonal basada en microservicios desarrollada con Python y FastAPI, que permite gestionar compras, ventas, clientes y bodegas. Cada microservicio cuenta con su propia base de datos y despliegue independiente.
+Este repositorio contiene una aplicación con arquitectura hexagonal, basada en microservicios, implementando comunicación asincrona por medio de Pub Sub, desarrollada con Python y FastAPI, que permite gestionar compras, ventas, clientes y bodegas. Cada microservicio cuenta con su propia base de datos y despliegue independiente a una instancia de Cloud Run en GCP.
 
 ---
 
