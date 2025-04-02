@@ -26,6 +26,7 @@ subscription_id = os.getenv("PRODUCT_SELLED_SUB")
 
 
 def publish_message(event_type: EventType, data: dict):
+    print(f"📤 Publicando evento: {event_type}, data: {data}")
     topic_path = publisher.topic_path(project_id, topic_id)
     data_str = json.dumps(data, default=str)
     future = publisher.publish(topic_path, data_str.encode("utf-8"), event_type=event_type.value)
