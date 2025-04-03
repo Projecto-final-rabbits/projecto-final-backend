@@ -4,8 +4,7 @@ from src.api.routes.proveedores_routes import router as proveedores_router
 from src.api.routes.productos_routes import router as productos_router
 from src.api.routes.ordenes_routes import router as ordenes_router
 from src.api.routes.detalles_routes import router as detalles_router
-from src.infrastructure.messaging.pubsub import subscribe_to_topic
-from src.infrastructure.messaging.handlers import handle_product_created
+
 import os
 
 from src.config.database import Base, engine
@@ -13,6 +12,8 @@ from src.config.database import Base, engine
 app = FastAPI()
 
 if os.getenv("TESTING") != "true":
+    from src.infrastructure.messaging.pubsub import subscribe_to_topic
+    from src.infrastructure.messaging.handlers import handle_product_created
     print("🚀 Iniciando suscripción a Pub/Sub desde COMPRAS")
     subscribe_to_topic(callback=handle_product_created)
 
