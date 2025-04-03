@@ -4,10 +4,15 @@ from src.api.routes.proveedores_routes import router as proveedores_router
 from src.api.routes.productos_routes import router as productos_router
 from src.api.routes.ordenes_routes import router as ordenes_router
 from src.api.routes.detalles_routes import router as detalles_router
+from src.infrastructure.messaging.pubsub import subscribe_to_topic
+from src.infrastructure.messaging.handlers import handle_product_created
 
 from src.config.database import Base, engine
 
 app = FastAPI()
+
+print("🚀 Iniciando suscripción a Pub/Sub desde COMPRAS", flush=True)
+subscribe_to_topic(callback=handle_product_created)
 
 app.include_router(compras_router)
 app.include_router(proveedores_router)
