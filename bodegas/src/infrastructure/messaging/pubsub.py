@@ -26,17 +26,35 @@ subscription_id = os.getenv("PRODUCT_SELLED_SUB")
 
 
 def publish_message(event_type: EventType, data: dict):
+    project_id = os.getenv("CLOUD_PROJECT_ID")
+    topic_id = os.getenv("PRODUCT_TOPIC")
     topic_path = publisher.topic_path(project_id, topic_id)
-    data_str = json.dumps(data, default=str)
-    attributes = {"event_type": str(event_type.value)}
 
-    print(f"📤 Enviando a Pub/Sub: topic={topic_path}, attributes={attributes}")
-    future = publisher.publish(
-        topic_path,
-        data_str.encode("utf-8"),
-        attributes=attributes
-    )
-    future.result()
+    data_str = json.dumps(data, default=str)
+
+    attributes = {
+        "event_type": str(event_type.value)
+    }
+
+    print("📦 Enviando a Pub/Sub:")
+    print("➡️ topic:", topic_path)
+    print("➡️ data:", data_str)
+    print("➡️ attributes:", attributes)
+    for k, v in attributes.items():
+        print(f"🔍 Attr {k}: {v} (tipo: {type(v)})")
+
+    try:
+        future = publisher.publish(
+            topic_path,
+            data_str.encode("utf-8"),
+            attributes=attributes
+        )
+        future.result()
+        print("✅ Mensaje publicado correctamente.")
+    except Exception as e:
+        print(f"🚨 Error al publicar en Pub/Sub: {e}")
+        raise
+
 
 def subscribe_to_topic(callback):
     subscription_path = subscriber.subscription_path(project_id, subscription_id)
