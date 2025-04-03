@@ -31,23 +31,11 @@ def publish_message(event_type: EventType, data: dict):
     topic_path = publisher.topic_path(project_id, topic_id)
 
     data_str = json.dumps(data, default=str)
-
-    attributes = {
-        "event_type": str(event_type.value)
-    }
-
-    print("📦 Enviando a Pub/Sub:")
-    print("➡️ topic:", topic_path)
-    print("➡️ data:", data_str)
-    print("➡️ attributes:", attributes)
-    for k, v in attributes.items():
-        print(f"🔍 Attr {k}: {v} (tipo: {type(v)})")
-
     try:
         future = publisher.publish(
             topic_path,
             data_str.encode("utf-8"),
-            attributes=attributes
+            event_type="product-created"
         )
         future.result()
         print("✅ Mensaje publicado correctamente.")
