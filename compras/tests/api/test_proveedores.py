@@ -27,3 +27,26 @@ def test_eliminar_proveedor(client):
     response = client.delete(f"/proveedores/{proveedor_id}")
     assert response.status_code == 200
     assert response.json()["message"] == "Proveedor eliminado"
+
+def test_actualizar_proveedor(client):
+    # Crear proveedor original
+    response = client.post("/proveedores/", json={
+        "nombre": "Proveedor Original",
+        "pais": "Chile",
+        "contacto": "Ana",
+        "telefono": "111111",
+        "email": "original@test.com"
+    })
+    assert response.status_code == 200
+    proveedor_id = response.json()["id"]
+
+    # Actualizar proveedor
+    update_response = client.put(f"/proveedores/{proveedor_id}", json={
+        "nombre": "Proveedor Actualizado",
+        "pais": "Colombia",
+        "contacto": "Juan",
+        "telefono": "222222",
+        "email": "actualizado@test.com"
+    })
+    assert update_response.status_code == 200
+    assert update_response.json()["nombre"] == "Proveedor Actualizado"

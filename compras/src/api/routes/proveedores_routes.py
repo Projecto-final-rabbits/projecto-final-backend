@@ -37,3 +37,10 @@ def eliminar_proveedor(proveedor_id: int, db: Session = Depends(get_db)):
     if not proveedor:
         raise HTTPException(status_code=404, detail="Proveedor no encontrado")
     return {"message": "Proveedor eliminado"}
+
+@router.put("/{proveedor_id}", response_model=ProveedorRead)
+def actualizar_proveedor(proveedor_id: int, proveedor: ProveedorCreate, db: Session = Depends(get_db)):
+    actualizado = repo.actualizar(db, proveedor_id, proveedor)
+    if not actualizado:
+        raise HTTPException(status_code=404, detail="Proveedor no encontrado")
+    return actualizado

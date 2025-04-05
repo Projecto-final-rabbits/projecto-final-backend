@@ -43,6 +43,15 @@ def test_listar_productos(client):
     assert response.status_code == 200
     assert isinstance(response.json(), list)
 
+def test_filtrar_productos_por_pais(client):
+    response = client.get("/productos/", params={"pais": "México"})
+    assert response.status_code == 200
+    productos = response.json()
+    assert isinstance(productos, list)
+    assert len(productos) >= 1
+    for producto in productos:
+        assert producto["proveedor_id"] == proveedor_id
+
 def test_obtener_producto_por_id(client):
     response = client.get(f"/productos/{producto_id}")
     assert response.status_code == 200
