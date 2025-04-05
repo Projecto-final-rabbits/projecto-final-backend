@@ -8,7 +8,7 @@ sys.modules["src.infrastructure.messaging.pubsub"] = MagicMock()
 
 from src.api.main import app
 from tests.db.test_database import TestingSessionLocal, init_test_db
-from src.api.routes import bodegas_routes, productos_routes
+from src.api.routes import productos_routes
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -25,7 +25,6 @@ def client():
         finally:
             db.close()
 
-    app.dependency_overrides[bodegas_routes.get_db] = override_get_db
     app.dependency_overrides[productos_routes.get_db] = override_get_db
     
     return TestClient(app)
