@@ -12,6 +12,7 @@ from src.application.services.proveedores_service import proveedor_existe
 from src.application.services.productos_service import ProductosService
 from src.infrastructure.adapters.out.pubsub_event_publisher import PubsubEventPublisher
 from src.config.database import get_db
+from typing import Optional
 
 router = APIRouter(prefix="/productos", tags=["Productos"])
 
@@ -37,9 +38,12 @@ def crear_producto(producto: ProductoCreate, db: Session = Depends(get_db)):
     return creado
 
 @router.get("/", response_model=list[ProductoRead])
-def listar_productos(db: Session = Depends(get_db)):
+def listar_productos(proveedor_id: Optional[int] = None, db: Session = Depends(get_db)):
     repo = ProductoRepository(db)
-    return repo.obtener_todos()
+    if proveedor_id:
+        return repo.obtener_por_proveedor(proveedor_id)
+    else:
+        return repo.obtener_todos()
 
 @router.get("/{producto_id}", response_model=ProductoRead)
 def obtener_producto(producto_id: UUID, db: Session = Depends(get_db)):

@@ -29,3 +29,6 @@ class ProductoRepository:
             self.db.commit()
             return True
         return False
+    
+    def obtener_por_proveedor(self, proveedor_id: int):
+        return self.db.query(Producto).filter(Producto.proveedor_id == str(proveedor_id)).all()
