@@ -2,6 +2,7 @@ import io
 import pandas as pd
 from unittest.mock import patch
 import httpx
+from datetime import datetime
 
 def test_cargar_csv_productos_exitoso(client):
     # Crear CSV con 2 productos válidos
@@ -153,3 +154,44 @@ def test_eliminar_producto_por_id(client):
     # Verificar que ya no existe
     get_resp = client.get(f"/productos/{producto_id}")
     assert get_resp.status_code == 404
+
+def test_filtrar_productos_por_proveedor_id(client):
+    # Crea dos productos con diferentes proveedores
+    productos = [
+        {
+            "nombre": "Producto 1",
+            "descripcion": "De proveedor 1",
+            "categoria": "Test",
+            "proveedor_id": 1,
+            "precio_compra": 1.0,
+            "precio_venta": 2.0,
+            "promocion_activa": False,
+            "fecha_vencimiento": "2026-01-01",
+            "condicion_almacenamiento": "Seco",
+            "tiempo_entrega_dias": 2
+        },
+        {
+            "nombre": "Producto 2",
+            "descripcion": "De proveedor 2",
+            "categoria": "Test",
+            "proveedor_id": 2,
+            "precio_compra": 1.5,
+            "precio_venta": 3.0,
+            "promocion_activa": True,
+            "fecha_vencimiento": "2026-01-01",
+            "condicion_almacenamiento": "Refrigerado",
+            "tiempo_entrega_dias": 3
+        }
+    ]
+
+    for p in productos:
+        response = client.post("/productos/", json=p)
+        assert response.status_code == 200
+
+    # Filtrar por proveedor_id=1
+    response = client.get("/productos?proveedor_id=1")
+    assert response.status_code == 200
+    data = response.json()
+    assert isinstance(data, list)
+    assert len(data) >= 1
+    assert all(str(p["proveedor_id"]) == "1" for p in data)
