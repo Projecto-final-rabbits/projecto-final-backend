@@ -22,3 +22,15 @@ class ProveedorRepositorySQLAlchemy:
             db.delete(proveedor)
             db.commit()
         return proveedor
+    
+    def actualizar(self, db: Session, proveedor_id: int, data: ProveedorCreate):
+        proveedor = self.obtener_por_id(db, proveedor_id)
+        if not proveedor:
+            return None
+
+        for campo, valor in data.dict(exclude_unset=True).items():
+            setattr(proveedor, campo, valor)
+
+        db.commit()
+        db.refresh(proveedor)
+        return proveedor

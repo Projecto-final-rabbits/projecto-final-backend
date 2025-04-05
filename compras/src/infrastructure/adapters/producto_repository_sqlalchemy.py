@@ -27,3 +27,11 @@ class ProductoRepositorySQLAlchemy:
             db.delete(producto)
             db.commit()
         return producto
+
+    def listar_por_pais(self, db: Session, pais: str):
+        return (
+            db.query(Producto)
+            .join(Proveedor, Producto.proveedor_id == Proveedor.id)
+            .filter(Proveedor.pais == pais)
+            .all()
+        )

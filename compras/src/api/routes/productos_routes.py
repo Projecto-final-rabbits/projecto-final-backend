@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 
 from src.infrastructure.adapters.producto_repository_sqlalchemy import ProductoRepositorySQLAlchemy
-from src.application.schemas.compras import ProductoCreate, ProductoRead
+from src.application.schemas.compras import ProductoCreate, ProductoRead, ProveedorCreate, ProveedorRead
 from src.config.database import SessionLocal
 
 router = APIRouter(prefix="/productos", tags=["Productos"])
@@ -21,7 +21,9 @@ def crear_producto(producto: ProductoCreate, db: Session = Depends(get_db)):
     return repo.guardar(db, producto)
 
 @router.get("/", response_model=List[ProductoRead])
-def listar_productos(db: Session = Depends(get_db)):
+def listar_productos(pais: Optional[str] = None, db: Session = Depends(get_db)):
+    if pais:
+        return repo.listar_por_pais(db, pais)
     return repo.listar_todos(db)
 
 @router.get("/{producto_id}", response_model=ProductoRead)
