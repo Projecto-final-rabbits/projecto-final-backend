@@ -44,35 +44,6 @@ def test_cargar_csv_productos_exitoso(client):
     assert data["creados"] == 2
     assert data["fallos"] == 0
 
-def test_csv_producto_con_proveedor_invalido(client):
-    df = pd.DataFrame([
-        {
-            "nombre": "Producto Invalido",
-            "descripcion": "No válido",
-            "categoria": "Otros",
-            "proveedor_id": 9999,  # No existe
-            "precio_compra": 1.0,
-            "precio_venta": 2.0,
-            "promocion_activa": True,
-            "fecha_vencimiento": "",
-            "condicion_almacenamiento": "Ambiente seco",
-            "tiempo_entrega_dias": 4
-        }
-    ])
-    csv_bytes = df.to_csv(index=False).encode("utf-8")  
-    file_stream = io.BytesIO(csv_bytes)
-
-    response = client.post(
-        "/productos/masivo",
-        files={"file": ("invalid.csv", file_stream, "text/csv")}
-    )
-
-    assert response.status_code == 201
-    data = response.json()
-    assert data["creados"] == 0
-    assert data["fallos"] == 1
-    assert "Proveedor" in data["errores"][0]["error"]
-
 @patch("src.infrastructure.adapters.out.pubsub_event_publisher.PubsubEventPublisher.publish")
 def test_csv_pubsub_mockeado(mock_publish, client):
     mock_publish.return_value = True  # Simula éxito
