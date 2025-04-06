@@ -1,5 +1,7 @@
+from uuid import UUID
+
 proveedor_id = None
-producto_id = None
+producto_id: UUID | None = None
 
 def test_crear_proveedor_para_producto(client):
     global proveedor_id
