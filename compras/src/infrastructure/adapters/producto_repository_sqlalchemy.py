@@ -9,7 +9,7 @@ class ProductoRepositorySQLAlchemy:
         proveedor = db.query(Proveedor).filter(Proveedor.id == data.proveedor_id).first()
         if not proveedor:
             raise HTTPException(status_code=404, detail="Proveedor no encontrado")
-        producto = Producto(**data.dict())
+        producto = Producto(**data.dict(exclude_unset=True))
         db.add(producto)
         db.commit()
         db.refresh(producto)
@@ -27,3 +27,11 @@ class ProductoRepositorySQLAlchemy:
             db.delete(producto)
             db.commit()
         return producto
+
+    def listar_por_pais(self, db: Session, pais: str):
+        return (
+            db.query(Producto)
+            .join(Proveedor, Producto.proveedor_id == Proveedor.id)
+            .filter(Proveedor.pais == pais)
+            .all()
+        )

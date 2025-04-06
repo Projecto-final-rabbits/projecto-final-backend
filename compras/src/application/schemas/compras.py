@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional, List
 from datetime import date
-
+from uuid import UUID
 # ------------------------------
 # Proveedor
 # ------------------------------
@@ -28,6 +28,7 @@ class ProveedorRead(ProveedorBase):
 # ------------------------------
 
 class ProductoBase(BaseModel):
+    id: Optional[UUID] = None
     nombre: str
     descripcion: Optional[str] = None
     precio_compra: float
@@ -39,7 +40,8 @@ class ProductoCreate(ProductoBase):
     pass
 
 class ProductoRead(ProductoBase):
-    id: int
+    id: UUID
+    proveedor_id: Optional[int]
 
     class Config:
         orm_mode = True
@@ -71,7 +73,7 @@ class OrdenCompraRead(OrdenCompraBase):
 
 class DetalleOrdenCompraBase(BaseModel):
     orden_id: int
-    producto_id: int
+    producto_id: UUID
     cantidad: int
     precio_unitario: float
 

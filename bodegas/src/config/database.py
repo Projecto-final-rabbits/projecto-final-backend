@@ -15,6 +15,13 @@ else:
 if not database_url:
     raise ValueError("DATABASE_URL bodegas no está definido")
 
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
 engine = create_engine(database_url, connect_args=connect_args)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
