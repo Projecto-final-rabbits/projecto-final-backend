@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 from src.config.database import SessionLocal
-from src.infrastructure.adapters.contacto_cliente_reposiroty_sqlalchemy import ContactoClienteRepositorySQLAlchemy
+from src.infrastructure.adapters.contacto_cliente_repository_sqlalchemy import ContactoClienteRepositorySQLAlchemy
 from src.application.schemas.clientes import ContactoClienteCreate, ContactoClienteRead
 
 router = APIRouter(prefix="/contactos", tags=["Contactos de Cliente"])
