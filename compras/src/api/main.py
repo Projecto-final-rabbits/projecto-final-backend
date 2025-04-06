@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from src.api.routes.compras_routes import router as compras_router
 from src.api.routes.proveedores_routes import router as proveedores_router
 from src.api.routes.productos_routes import router as productos_router
@@ -10,6 +11,13 @@ import os
 from src.config.database import Base, engine
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 if os.getenv("TESTING") != "true":
     from src.infrastructure.messaging.pubsub import subscribe_to_topic
