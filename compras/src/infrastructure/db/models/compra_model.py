@@ -1,6 +1,8 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, Date
 from sqlalchemy.orm import relationship
 from src.config.database import Base
+from sqlalchemy.dialects.postgresql import UUID
+import uuid
 
 class Proveedor(Base):
     __tablename__ = 'proveedores'
@@ -19,7 +21,7 @@ class Proveedor(Base):
 class Producto(Base):
     __tablename__ = 'productos'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     nombre = Column(String, nullable=False)
     descripcion = Column(String)
     precio_compra = Column(Float)
@@ -49,7 +51,7 @@ class DetalleOrdenCompra(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     orden_id = Column(Integer, ForeignKey('ordenes_compra.id'))
-    producto_id = Column(Integer, ForeignKey('productos.id'))
+    producto_id = Column(UUID(as_uuid=True), ForeignKey('productos.id'))
     cantidad = Column(Integer)
     precio_unitario = Column(Float)
 

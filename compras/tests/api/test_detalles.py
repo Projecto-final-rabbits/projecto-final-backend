@@ -1,5 +1,8 @@
+from uuid import UUID
+from uuid import uuid4
+
 proveedor_id = None
-producto_id = None
+producto_id: UUID | None = None
 orden_id = None
 detalle_id = None
 
@@ -41,10 +44,12 @@ def test_crear_orden(client):
 def test_crear_detalle_con_producto_inexistente(client):
     test_crear_proveedor(client)
     test_crear_orden(client)
-    
+
+    producto_falso = str(uuid4())  # UUID válido pero inexistente
+
     response = client.post("/detalles/", json={
         "orden_id": orden_id,
-        "producto_id": 9999,
+        "producto_id": producto_falso,
         "cantidad": 3,
         "precio_unitario": 20000.0
     })
@@ -57,7 +62,7 @@ def test_crear_detalle_con_orden_inexistente(client):
 
     response = client.post("/detalles/", json={
         "orden_id": 9999,
-        "producto_id": producto_id,
+        "producto_id": str(producto_id),
         "cantidad": 2,
         "precio_unitario": 10000.0
     })
@@ -69,7 +74,7 @@ def test_crear_detalle(client):
     global detalle_id
     response = client.post("/detalles/", json={
         "orden_id": orden_id,
-        "producto_id": producto_id,
+        "producto_id": str(producto_id),
         "cantidad": 4,
         "precio_unitario": 30000.0
     })

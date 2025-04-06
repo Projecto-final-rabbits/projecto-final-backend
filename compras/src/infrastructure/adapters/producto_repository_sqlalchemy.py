@@ -9,7 +9,7 @@ class ProductoRepositorySQLAlchemy:
         proveedor = db.query(Proveedor).filter(Proveedor.id == data.proveedor_id).first()
         if not proveedor:
             raise HTTPException(status_code=404, detail="Proveedor no encontrado")
-        producto = Producto(**data.dict())
+        producto = Producto(**data.dict(exclude_unset=True))
         db.add(producto)
         db.commit()
         db.refresh(producto)
