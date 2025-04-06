@@ -9,14 +9,17 @@ class ContactoClienteBase(BaseModel):
     email: str
 
 class ContactoClienteCreate(ContactoClienteBase):
-    pass
+    cliente_id: int
+
+    class Config:
+        extra = "allow"
 
 class ContactoClienteRead(ContactoClienteBase):
     id: int
     cliente_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # Schemas para DireccionEntrega
@@ -26,14 +29,17 @@ class DireccionEntregaBase(BaseModel):
     pais: str
 
 class DireccionEntregaCreate(DireccionEntregaBase):
-    pass
+    cliente_id: int
+
+    class Config:
+        extra = "allow"
 
 class DireccionEntregaRead(DireccionEntregaBase):
     id: int
     cliente_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # Schemas para Tienda
@@ -43,14 +49,17 @@ class TiendaBase(BaseModel):
     zona: str
 
 class TiendaCreate(TiendaBase):
-    pass
+    cliente_id: int
+
+    class Config:
+        extra = "allow"
 
 class TiendaRead(TiendaBase):
     id: int
     cliente_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # Schemas para Pedido
@@ -66,7 +75,7 @@ class PedidoRead(PedidoBase):
     cliente_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # Schemas para Cliente
@@ -88,4 +97,4 @@ class ClienteRead(ClienteBase):
     pedidos: List[PedidoRead] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True
