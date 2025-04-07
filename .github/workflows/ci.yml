@@ -229,6 +229,8 @@ jobs:
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.clientes-changes == 'true' }}
 
+    env:
+      TESTING: "true"
     steps:
       - name: ⬇️ Checkout código
         uses: actions/checkout@v3
@@ -302,6 +304,7 @@ jobs:
           GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
         run: |
           gcloud run deploy clientes \
+            --set-env-vars=DATABASE_URL=${{ secrets.DATABASE_URL_CLIENTES }} \
             --image=us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/final-project/clientes:development \
             --platform=managed \
             --region=us-central1 \
