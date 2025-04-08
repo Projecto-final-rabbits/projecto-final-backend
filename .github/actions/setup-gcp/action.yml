@@ -1,0 +1,21 @@
+name: Setup GCP Auth
+description: Autenticar en Google Cloud Platform
+inputs:
+  gcp_credentials:
+    description: GCP credentials JSON
+    required: true
+  gcp_project_id:
+    description: GCP project ID
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: 🔐 Auth
+      uses: google-github-actions/auth@v1
+      with:
+        credentials_json: "${{ inputs.gcp_credentials }}"
+
+    - name: 🔧 Setup gcloud CLI
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        project_id: ${{ inputs.gcp_project_id }}

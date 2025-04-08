@@ -13,4 +13,4 @@ ENV PYTHONPATH=/app
 
 EXPOSE 8002
 
-CMD ["uvicorn", "src.infrastructure.api.main:app", "--host", "0.0.0.0", "--port", "8002"]
+CMD ["uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "8002"]
