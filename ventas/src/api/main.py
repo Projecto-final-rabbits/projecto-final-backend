@@ -7,6 +7,7 @@ from src.api.routes.pedidos_routes import router as pedidos_router
 from src.api.routes.detalles_routes import router as detalles_router
 from src.api.routes.planes_venta_routes import router as planes_venta_router
 
+# comment
 from src.config.database import Base, engine
 
 app = FastAPI()
