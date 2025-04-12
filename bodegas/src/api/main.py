@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.api.routes.bodegas_routes import router as bodegas_router
 from src.api.routes.productos_routes import router as productos_router
 
+# comment
 from src.config.database import Base, engine
 
 app = FastAPI()

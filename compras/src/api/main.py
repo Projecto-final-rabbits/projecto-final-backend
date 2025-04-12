@@ -8,6 +8,7 @@ from src.api.routes.detalles_routes import router as detalles_router
 
 import os
 
+# comment
 from src.config.database import Base, engine
 
 app = FastAPI()
