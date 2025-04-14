@@ -16,6 +16,7 @@ def get_db():
         yield db
     finally:
         db.close()
+        
 
 @router.post("/", response_model=ClienteRead)
 def crear_cliente(cliente: ClienteCreate, db: Session = Depends(get_db)):
