@@ -21,7 +21,7 @@ class ProductoRead(ProductoBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # ------------------------------
 # Cliente
@@ -41,7 +41,7 @@ class ClienteRead(ClienteBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # ------------------------------
 # Vendedor
@@ -60,7 +60,7 @@ class VendedorRead(VendedorBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # ------------------------------
 # Pedido
@@ -80,7 +80,7 @@ class PedidoRead(PedidoBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # ------------------------------
 # DetallePedido
@@ -99,7 +99,7 @@ class DetallePedidoRead(DetallePedidoBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # ------------------------------
 # PlanVenta
@@ -118,4 +118,4 @@ class PlanVentaRead(PlanVentaBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True

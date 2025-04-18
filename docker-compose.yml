@@ -26,8 +26,8 @@ services:
       - ./ventas/src:/app/src
     command: uvicorn src.api.main:app --host 0.0.0.0 --port 8001 --reload
     restart: unless-stopped
-    depends_on:
-      - db_ventas
+    # depends_on:
+    #   - db_ventas
 
   clientes:
     profiles: [clientes, all]
