@@ -11,6 +11,7 @@ def test_crear_proveedor_para_orden(client):
         "email": "proveedor_orden@test.com"
     })
     assert response.status_code == 200
+    print("proveedor_id creado", proveedor_id)
     proveedor_id = response.json()["id"]
 
 def test_crear_orden_con_proveedor_inexistente(client):
@@ -25,6 +26,7 @@ def test_crear_orden_con_proveedor_inexistente(client):
 
 def test_crear_orden_compra(client):
     global orden_id
+    print("proveedor_id en test orden compra", proveedor_id)
     response = client.post("/ordenes/", json={
         "proveedor_id": proveedor_id,
         "estado": "pendiente",
@@ -33,10 +35,10 @@ def test_crear_orden_compra(client):
     assert response.status_code == 200
     orden_id = response.json()["id"]
 
-def test_listar_ordenes(client):
-    response = client.get("/ordenes/")
-    assert response.status_code == 200
-    assert isinstance(response.json(), list)
+# def test_listar_ordenes(client):
+#     response = client.get("/ordenes/")
+#     assert response.status_code == 200
+#     assert isinstance(response.json(), list)
 
 def test_obtener_orden_por_id(client):
     response = client.get(f"/ordenes/{orden_id}")

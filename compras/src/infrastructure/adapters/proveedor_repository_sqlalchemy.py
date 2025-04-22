@@ -34,3 +34,6 @@ class ProveedorRepositorySQLAlchemy:
         db.commit()
         db.refresh(proveedor)
         return proveedor
+
+    def obtener_por_nombre(self, db: Session, nombre: str):
+        return db.query(Proveedor).filter(Proveedor.nombre == nombre).first()
