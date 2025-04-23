@@ -10,7 +10,6 @@ from enum import Enum
 
 class BodegaBase(BaseModel):
     nombre: str
-    direccion: Optional[str] = None
     ciudad: str
     pais: str
 
@@ -21,8 +20,7 @@ class BodegaRead(BodegaBase):
     id: int
 
     class Config:
-        orm_mode = True
-
+        from_attributes = True
 
 # ------------------------------
 # Producto
@@ -47,7 +45,6 @@ class ProductoRead(ProductoBase):
     id: UUID
 
     class Config:
-        orm_mode = True
         from_attributes = True
 
 
@@ -67,7 +64,7 @@ class InventarioRead(InventarioBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # ------------------------------
@@ -92,4 +89,4 @@ class MovimientoInventarioRead(MovimientoInventarioBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True

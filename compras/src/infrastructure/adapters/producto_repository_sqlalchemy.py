@@ -35,3 +35,7 @@ class ProductoRepositorySQLAlchemy:
             .filter(Proveedor.pais == pais)
             .all()
         )
+    
+    def eliminar_todos(self, db: Session):
+        db.query(Producto).delete()
+        db.commit()

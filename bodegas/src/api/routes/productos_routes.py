@@ -75,3 +75,9 @@ async def cargar_csv_productos(file: UploadFile = File(...), db: Session = Depen
     resultado = productos_service.crear_productos_desde_csv(content)
 
     return JSONResponse(status_code=201, content=resultado)
+
+@router.delete("/")
+def eliminar_productos(db: Session = Depends(get_db)):
+    repo = ProductoRepository(db)
+    repo.eliminar_todos()
+    return {"message": "Productos eliminados"}

@@ -10,6 +10,6 @@ client = TestClient(app)
 
 
 def test_health():
-    response = client.get("/health")
+    response = client.get("/bodegas/health")
     assert response.status_code == 200
     assert response.json() == {"message": "OK Sustentacion activa"}
