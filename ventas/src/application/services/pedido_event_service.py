@@ -1,15 +1,19 @@
-from src.infrastructure.adapters.pedido_repository_sqlalchemy import PedidoRepositorySQLAlchemy
+from src.domain.events.event_type import EventType
+from src.infrastructure.adapters.out.pubsub_event_publisher import PubsubEventPublisher
 
 class PedidoService:
-    def __init__(self, event_publisher, repo: PedidoRepositorySQLAlchemy):
-        self.event_publisher = event_publisher
-        self.repo = repo
-    
-    def crear_pedido_event(self, pedido: dict ):
+    def __init__(self, publisher: PubsubEventPublisher):
+        self.publisher = publisher
 
-        from src.domain.events.event_type import EventType
-        self.event_publisher.publish(EventType.pedido_created, pedido)
-        # Publicar el evento de creación de pedido
+    # --- evento clásico (si lo sigues usando)
+    def crear_pedido_event(self, pedido: dict):
+        self.publisher.publish(EventType.pedido_created, pedido)
 
-
-    
+    # --- nuevos flujos para creación de pedido
+    def publicar_eventos_pedido(self, pedido_total: dict, solo_productos: list[dict]) -> None:
+        # 1. Bodega → solo lista de productos
+        self.publisher.publish(EventType.bodega_product_list, {"productos": solo_productos})
+        # 2. Clientes → pedido completo
+        self.publisher.publish(EventType.clientes_pedido_total, pedido_total)
+        # 3. (opcional) mantener tu evento histórico
+        self.publisher.publish(EventType.pedido_created, pedido_total)

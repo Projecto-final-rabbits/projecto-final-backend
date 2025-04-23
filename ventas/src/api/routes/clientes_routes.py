@@ -21,7 +21,7 @@ def get_db():
 @router.post("/", response_model=ClienteRead)
 def crear_cliente(cliente: ClienteCreate, db: Session = Depends(get_db)):
     repo = ClienteRepositorySQLAlchemy(db)
-    return repo.guardar(db, cliente)
+    return repo.guardar(cliente)
 
 @router.get("/", response_model=List[ClienteRead])
 def listar_clientes(db: Session = Depends(get_db)):
@@ -31,7 +31,7 @@ def listar_clientes(db: Session = Depends(get_db)):
 @router.get("/{cliente_id}", response_model=ClienteRead)
 def obtener_cliente(cliente_id: int, db: Session = Depends(get_db)):
     repo = ClienteRepositorySQLAlchemy(db)
-    cliente = repo.obtener_por_id(db, cliente_id)
+    cliente = repo.obtener_por_id(cliente_id)
     if not cliente:
         raise HTTPException(status_code=404, detail="Cliente no encontrado")
     return cliente
@@ -39,4 +39,4 @@ def obtener_cliente(cliente_id: int, db: Session = Depends(get_db)):
 @router.delete("/{cliente_id}")
 def eliminar_cliente(cliente_id: int, db: Session = Depends(get_db)):
     repo = ClienteRepositorySQLAlchemy(db)
-    return repo.eliminar(db, cliente_id)
+    return repo.eliminar(cliente_id)
