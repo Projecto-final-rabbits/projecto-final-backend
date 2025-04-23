@@ -87,6 +87,7 @@ class PedidoRead(BaseModel):
     class Config:
         from_attributes = True
 
+
 # ------------------------------
 # DetallePedido
 # ------------------------------
