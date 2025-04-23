@@ -5,6 +5,7 @@ from src.config.database import SessionLocal
 from src.infrastructure.adapters.cliente_repository_sqlalchemy import ClienteRepositorySQLAlchemy
 from src.application.schemas.clientes import ClienteCreate, ClienteRead
 
+
 router = APIRouter(prefix="/clientes", tags=["Clientes"])
 repo_cliente = ClienteRepositorySQLAlchemy()
 

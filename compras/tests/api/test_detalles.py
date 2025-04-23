@@ -42,7 +42,6 @@ def test_crear_orden(client):
     orden_id = response.json()["id"]
 
 def test_crear_detalle_con_producto_inexistente(client):
-    test_crear_proveedor(client)
     test_crear_orden(client)
 
     producto_falso = str(uuid4())  # UUID válido pero inexistente
@@ -57,7 +56,6 @@ def test_crear_detalle_con_producto_inexistente(client):
     assert response.json()["detail"] == "Producto no encontrado"
 
 def test_crear_detalle_con_orden_inexistente(client):
-    test_crear_proveedor(client)
     test_crear_producto(client)
 
     response = client.post("/detalles/", json={

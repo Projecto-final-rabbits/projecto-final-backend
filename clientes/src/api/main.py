@@ -10,7 +10,6 @@ from src.config.database import Base, engine
 
 app = FastAPI()
 
-# Incluir todos los routers de los módulos correspondientes
 app.include_router(clientes_router)
 app.include_router(contactos_router)
 app.include_router(direcciones_router)
