@@ -39,3 +39,8 @@ def eliminar_producto(producto_id: UUID, db: Session = Depends(get_db)):
     if not producto:
         raise HTTPException(status_code=404, detail="Producto no encontrado")
     return {"message": "Producto eliminado"}
+
+@router.delete("/")
+def eliminar_productos(db: Session = Depends(get_db)):
+    repo.eliminar_todos(db)
+    return {"message": "Productos eliminados"}

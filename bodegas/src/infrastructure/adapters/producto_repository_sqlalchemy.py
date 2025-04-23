@@ -32,3 +32,7 @@ class ProductoRepository:
     
     def obtener_por_proveedor(self, proveedor_id: int):
         return self.db.query(Producto).filter(Producto.proveedor_id == str(proveedor_id)).all()
+    
+    def eliminar_todos(self):
+        self.db.query(Producto).delete()
+        self.db.commit()
