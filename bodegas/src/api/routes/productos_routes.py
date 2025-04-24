@@ -16,13 +16,15 @@ from typing import Optional
 
 router = APIRouter(prefix="/productos", tags=["Productos"])
 
-
 @router.post("/", response_model=ProductoRead)
 def crear_producto(producto: ProductoCreate, db: Session = Depends(get_db)):
+    repo = ProductoRepository(db)
+    producto_existe = repo.obtener_por_nombre(producto.nombre)
+    if producto_existe:
+        raise HTTPException(status_code=400, detail="Ya existe un producto con ese nombre")
     if not proveedor_existe(producto.proveedor_id):
         raise HTTPException(status_code=404, detail="Proveedor no encontrado")
-
-    repo = ProductoRepository(db)
+    
     nuevo = Producto(**producto.dict())
     creado = repo.crear(nuevo)
 
@@ -38,10 +40,19 @@ def crear_producto(producto: ProductoCreate, db: Session = Depends(get_db)):
     return creado
 
 @router.get("/", response_model=list[ProductoRead])
-def listar_productos(proveedor_id: Optional[int] = None, db: Session = Depends(get_db)):
+def listar_productos(
+    proveedor_id: Optional[int] = None,
+    categoryId: Optional[str] = None,
+    db: Session = Depends(get_db)
+):
     repo = ProductoRepository(db)
-    if proveedor_id:
+    
+    if proveedor_id and categoryId:
+        return repo.obtener_por_proveedor_y_categoria(proveedor_id, categoryId)
+    elif proveedor_id:
         return repo.obtener_por_proveedor(proveedor_id)
+    elif categoryId:
+        return repo.obtener_por_categoria(categoryId)
     else:
         return repo.obtener_todos()
 
