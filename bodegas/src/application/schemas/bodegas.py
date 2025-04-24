@@ -78,7 +78,8 @@ class TipoMovimiento(str, Enum):
 class MovimientoInventarioBase(BaseModel):
     producto_id: UUID
     cantidad: int
-    tipo: TipoMovimiento
+    bodega_id: int
+    tipo_movimiento: TipoMovimiento
     fecha: Optional[datetime] = None
     descripcion: Optional[str] = None
 

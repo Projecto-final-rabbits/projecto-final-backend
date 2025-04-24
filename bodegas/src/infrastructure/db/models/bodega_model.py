@@ -57,9 +57,11 @@ class MovimientoInventario(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     producto_id = Column(UUID(as_uuid=True), ForeignKey('productos.id'))
+    bodega_id = Column(Integer, ForeignKey('bodegas.id'))
     tipo_movimiento = Column(Enum(TipoMovimientoEnum))
     cantidad = Column(Integer)
     fecha = Column(Date)
     descripcion = Column(Text)
 
     producto = relationship("Producto", back_populates="movimientos")
+    bodega = relationship("Bodega")
