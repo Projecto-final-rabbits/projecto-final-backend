@@ -36,3 +36,15 @@ class ProductoRepository:
     def eliminar_todos(self):
         self.db.query(Producto).delete()
         self.db.commit()
+
+    def obtener_por_nombre(self, nombre: str):
+        return self.db.query(Producto).filter(Producto.nombre == nombre).first()
+    
+    def obtener_por_categoria(self, categoria: str):
+        return self.db.query(Producto).filter(Producto.categoria == categoria).all()
+
+    def obtener_por_proveedor_y_categoria(self, proveedor_id: int, categoria: str):
+        return self.db.query(Producto).filter(
+            Producto.proveedor_id == str(proveedor_id),
+            Producto.categoria == categoria
+        ).all()
