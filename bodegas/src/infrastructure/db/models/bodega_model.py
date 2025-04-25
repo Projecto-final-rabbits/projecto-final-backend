@@ -44,8 +44,8 @@ class Inventario(Base):
     __tablename__ = 'inventarios'
 
     id = Column(Integer, primary_key=True, index=True)
-    producto_id = Column(UUID(as_uuid=True), ForeignKey('productos.id'))
-    bodega_id = Column(Integer, ForeignKey('bodegas.id'))
+    producto_id = Column(UUID(as_uuid=True), ForeignKey('productos.id'), nullable=False)
+    bodega_id = Column(Integer, ForeignKey('bodegas.id'), nullable=False)
     cantidad_disponible = Column(Integer)
 
     producto = relationship("Producto", back_populates="inventarios")
@@ -56,8 +56,8 @@ class MovimientoInventario(Base):
     __tablename__ = 'movimientos_inventario'
 
     id = Column(Integer, primary_key=True, index=True)
-    producto_id = Column(UUID(as_uuid=True), ForeignKey('productos.id'))
-    bodega_id = Column(Integer, ForeignKey('bodegas.id'))
+    producto_id = Column(UUID(as_uuid=True), ForeignKey('productos.id'), nullable=False)
+    bodega_id = Column(Integer, ForeignKey('bodegas.id'), nullable=False)
     tipo_movimiento = Column(Enum(TipoMovimientoEnum))
     cantidad = Column(Integer)
     fecha = Column(Date)
