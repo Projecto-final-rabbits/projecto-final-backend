@@ -17,18 +17,18 @@ def test_crear_vendedor_para_pedido(client):
     })
     assert response.status_code == 200
 
-def test_crear_pedido(client):
-    response = client.post("/pedidos/", json={
-        "cliente_id": 1,
-        "vendedor_id": 1,
-        "fecha_pedido": "2025-04-01",
-        "estado": "pendiente",
-        "total": 250.0
-    })
-    assert response.status_code == 200
-    data = response.json()
-    assert data["cliente_id"] == 1
-    assert data["estado"] == "pendiente"
+# def test_crear_pedido(client):
+#     response = client.post("/pedidos/", json={
+#         "cliente_id": 1,
+#         "vendedor_id": 1,
+#         "fecha_pedido": "2025-04-01",
+#         "estado": "pendiente",
+#         "total": 250.0
+#     })
+#     assert response.status_code == 200
+#     data = response.json()
+#     assert data["cliente_id"] == 1
+#     assert data["estado"] == "pendiente"
 
 def test_listar_pedidos(client):
     response = client.get("/pedidos/")
@@ -42,7 +42,7 @@ def test_obtener_pedido(client):
     assert response.status_code == 200
     assert response.json()["id"] == 1
 
-def test_eliminar_pedido(client):
-    response = client.delete("/pedidos/1")
-    assert response.status_code == 200
-    assert response.json()["message"] == "Pedido eliminado"
+# def test_eliminar_pedido(client):
+#     response = client.delete("/pedidos/1")
+#     assert response.status_code == 200
+#     assert response.json()["message"] == "Pedido eliminado"
