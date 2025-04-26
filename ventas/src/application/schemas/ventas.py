@@ -80,7 +80,12 @@ class PedidoBase(BaseModel):
     total: Optional[float] = 0.0
 
 class PedidoCreate(PedidoBase):
-    pass
+    cliente_id: int
+    vendedor_id: int
+    fecha_envio: date
+    direccion_entrega: str
+    productos: List[ProductoCantidad]=[]
+    estado: Optional[str] = "pendiente"
 
 class PedidoRead(PedidoBase):
     id: int
