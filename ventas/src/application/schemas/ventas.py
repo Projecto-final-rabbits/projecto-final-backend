@@ -113,8 +113,9 @@ class PlanVentaBase(BaseModel):
     cuota: int
     periodo: str
 
-class PlanVentaCreate(PlanVentaBase):
+class PlanVentaCreate(PlanVentaBase): 
     pass
+
 
 class PlanVentaRead(PlanVentaBase):
     id: int
