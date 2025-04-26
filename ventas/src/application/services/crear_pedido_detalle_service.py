@@ -38,6 +38,9 @@ class CrearPedidoConDetalleService:
         self.repo.add_pedido(pedido_orm)
         db = self.repo.db
 
+        # inicializa acumulador de total
+        acumulado = 0.0
+
         try:
             # 2) Upsert Productos y DetallePedido
             for p in dto.productos:
@@ -56,6 +59,10 @@ class CrearPedidoConDetalleService:
                     local = self.prod_repo.guardar(db, schema)
                     db.flush()
 
+                # calcula subtotal y acumula
+                subtotal = p.cantidad * local.precio_venta
+                acumulado += subtotal
+
                 detalle = DetallePedido(
                     pedido_id=      pedido_orm.id,
                     producto_id=    pid,
@@ -71,28 +78,24 @@ class CrearPedidoConDetalleService:
             self.repo.rollback()
             raise
 
-        # 4) Publicar eventos **por separado**
+        # 4) Publicar eventos
         solo_productos = [
             {"producto_id": p.producto_id, "cantidad": p.cantidad}
             for p in dto.productos
         ]
-
-        # 4.a) lista de productos → PEDIDOS_BODEGA_TOPIC
         self.publisher.publish_productos(solo_productos)
-
-        # 4.b) pedido completo → PEDIDO_TOPIC
         pedido_total = {
-            "pedido_id":        pedido_orm.id,
-            "cliente_id":       dto.cliente_id,
-            "vendedor_id":      dto.vendedor_id,
-            "fecha_envio":      str(dto.fecha_envio),
-            "direccion_entrega":dto.direccion_entrega,
-            "estado":           "pendiente",
-            "productos":        solo_productos,
+            "pedido_id":         pedido_orm.id,
+            "cliente_id":        dto.cliente_id,
+            "vendedor_id":       dto.vendedor_id,
+            "fecha_envio":       str(dto.fecha_envio),
+            "direccion_entrega": dto.direccion_entrega,
+            "estado":            "pendiente",
+            "productos":         solo_productos,
         }
         self.publisher.publish_pedido(pedido_total)
 
-        # 5) Retornar DTO de lectura
+        # 5) Devolver DTO con el total calculado
         return PedidoRead(
             id=                pedido_orm.id,
             cliente_id=        pedido_orm.cliente_id,
@@ -101,4 +104,5 @@ class CrearPedidoConDetalleService:
             direccion_entrega= pedido_orm.direccion_entrega,
             estado=            pedido_orm.estado,
             productos=         dto.productos,
+            total=             acumulado,
         )
