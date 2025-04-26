@@ -1,8 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from src.infrastructure.db.models.cliente_model import Cliente, ContactoCliente, DireccionEntrega, Tienda, Pedido
-from src.application.schemas.clientes import ClienteCreate, ContactoClienteCreate, DireccionEntregaCreate, TiendaCreate, PedidoCreate
-from sqlalchemy import desc
+from src.infrastructure.db.models.cliente_model import Cliente
+from src.application.schemas.clientes import ClienteCreate
 
 class ClienteRepositorySQLAlchemy:
     def guardar(self, db: Session, data: ClienteCreate) -> Cliente:

@@ -1,30 +1,53 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from src.infrastructure.db.models.venta_model import Pedido, Cliente, Vendedor
+from src.infrastructure.db.models.venta_model import DetallePedido, Pedido
 from src.application.schemas.ventas import PedidoCreate
 
 class PedidoRepositorySQLAlchemy:
-    def guardar(self, db: Session, data: PedidoCreate) -> Pedido:
-        if not db.query(Cliente).filter(Cliente.id == data.cliente_id).first():
-            raise HTTPException(status_code=404, detail="Cliente no encontrado")
-        if not db.query(Vendedor).filter(Vendedor.id == data.vendedor_id).first():
-            raise HTTPException(status_code=404, detail="Vendedor no encontrado")
-        pedido = Pedido(**data.dict())
-        db.add(pedido)
-        db.commit()
-        db.refresh(pedido)
+
+    def __init__(self, db: Session):
+        self.db = db
+
+# src/infrastructure/adapters/pedido_repository_sqlalchemy.py
+
+from sqlalchemy.orm import Session
+from fastapi import HTTPException
+from src.infrastructure.db.models.venta_model import Pedido
+from src.application.schemas.ventas import PedidoCreate
+
+class PedidoRepositorySQLAlchemy:
+
+    def __init__(self, db: Session):
+        self.db = db
+
+        # ---------- Pedido ----------
+    def add_pedido(self, pedido: Pedido) -> Pedido:
+        self.db.add(pedido)
+        self.db.flush()        # genera id sin cerrar la transacción
         return pedido
 
-    def listar_todos(self, db: Session):
-        return db.query(Pedido).all()
+    # ---------- Detalle ----------
+    def add_detalle(self, detalle: DetallePedido) -> DetallePedido:
+        self.db.add(detalle)
+        return detalle
 
-    def obtener_por_id(self, db: Session, pedido_id: int):
-        return db.query(Pedido).filter(Pedido.id == pedido_id).first()
+    # ---------- utilidades ----------
+    def commit(self):
+        self.db.commit()
 
-    def eliminar(self, db: Session, pedido_id: int):
-        pedido = db.query(Pedido).filter(Pedido.id == pedido_id).first()
+    def rollback(self):
+        self.db.rollback()
+
+    def listar_todos(self) -> list[Pedido]:
+        return self.db.query(Pedido).all()
+
+    def obtener_por_id(self, pedido_id: int) -> Pedido | None:
+        return self.db.query(Pedido).filter(Pedido.id == pedido_id).first()
+
+    def eliminar(self, pedido_id: int) -> dict:
+        pedido = self.db.query(Pedido).filter(Pedido.id == pedido_id).first()
         if not pedido:
             raise HTTPException(status_code=404, detail="Pedido no encontrado")
-        db.delete(pedido)
-        db.commit()
+        self.db.delete(pedido)
+        self.db.commit()
         return {"message": "Pedido eliminado"}

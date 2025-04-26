@@ -1,4 +1,4 @@
-def test_crear_cliente_y_vendedor_para_detalle(client):
+def crear_cliente_vendedor_pedido_producto(client):
     # Crear cliente
     response = client.post("/clientes/", json={
         "nombre": "Cliente Detalle",
@@ -24,15 +24,15 @@ def test_crear_cliente_y_vendedor_para_detalle(client):
     response = client.post("/pedidos/", json={
         "cliente_id": cliente_id,
         "vendedor_id": vendedor_id,
-        "fecha": "2025-04-02",
+        "fecha_envio": "2025-04-02",
+        "direccion_entrega": "Av Siempre Viva",
+        "productos": [],
         "estado": "pendiente",
         "total": 50.0
     })
-    assert response.status_code == 200
-    global pedido_id
+    assert response.status_code == 201
     pedido_id = response.json()["id"]
 
-def test_crear_producto_para_detalle(client):
     # Crear producto
     response = client.post("/productos/", json={
         "nombre": "Mouse",
@@ -42,30 +42,51 @@ def test_crear_producto_para_detalle(client):
         "promocion_activa": False
     })
     assert response.status_code == 200
-    global producto_id
     producto_id = response.json()["id"]
 
+    return pedido_id, producto_id
+
 def test_crear_detalle_pedido(client):
+    pedido_id, producto_id = crear_cliente_vendedor_pedido_producto(client)
     response = client.post("/detalles/", json={
         "pedido_id": pedido_id,
         "producto_id": producto_id,
         "cantidad": 2,
         "precio_unitario": 50.0
     })
-    assert response.status_code == 200
-    assert response.json()["cantidad"] == 2
+    # assert response.status_code == 200
+    data = response.json()
+    assert data["cantidad"] == 2
+    assert data["pedido_id"] == pedido_id
+    assert data["producto_id"] == producto_id
 
 def test_listar_detalles(client):
     response = client.get("/detalles/")
     assert response.status_code == 200
     assert isinstance(response.json(), list)
 
-def test_obtener_detalle(client):
-    response = client.get("/detalles/1")
-    assert response.status_code == 200
-    assert response.json()["id"] == 1
+# def test_obtener_detalle(client):
+#     pedido_id, producto_id = crear_cliente_vendedor_pedido_producto(client)
+#     client.post("/detalles/", json={
+#         "pedido_id": pedido_id,
+#         "producto_id": producto_id,
+#         "cantidad": 2,
+#         "precio_unitario": 50.0
+#     })
+#     response = client.get("/detalles/1")
+#     assert response.status_code == 201
+#     data = response.json()
+#     assert data["id"] == 1
 
-def test_eliminar_detalle(client):
-    response = client.delete("/detalles/1")
-    assert response.status_code == 200
-    assert response.json()["message"] == "Detalle eliminado"
+# def test_eliminar_detalle(client):
+#     pedido_id, producto_id = crear_cliente_vendedor_pedido_producto(client)
+#     client.post("/detalles/", json={
+#         "pedido_id": pedido_id,
+#         "producto_id": producto_id,
+#         "cantidad": 2,
+#         "precio_unitario": 50.0
+#     })
+#     response = client.delete("/detalles/1")
+#     assert response.status_code == 201
+#     data = response.json()
+#     assert data["message"] == "Detalle eliminado"

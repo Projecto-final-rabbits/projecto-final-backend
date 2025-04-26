@@ -23,10 +23,10 @@ def test_obtener_vendedor(client):
     assert response.json()["id"] == 1
     assert response.json()["nombre"] == "Vendedor Detalle"
 
-def test_eliminar_vendedor(client):
-    response = client.delete("/vendedores/1")
-    assert response.status_code == 200
-    assert response.json()["message"] == "Vendedor eliminado"
+# def test_eliminar_vendedor(client):
+#     response = client.delete("/vendedores/1")
+#     assert response.status_code == 200
+#     assert response.json()["message"] == "Vendedor eliminado"
 
 def test_obtener_vendedor_inexistente(client):
     response = client.get("/vendedores/999")

@@ -1,7 +1,6 @@
-
 from datetime import date
-from typing import Optional
-from pydantic import BaseModel
+from typing import List, Optional
+from pydantic import BaseModel, Field
 from uuid import UUID
 
 # ------------------------------
@@ -25,6 +24,9 @@ class ProductoRead(ProductoBase):
     class Config:
         from_attributes = True
 
+class ProductoCantidad(BaseModel):
+    producto_id: UUID  # usa int para mantener consistencia con PK de la tabla productos
+    cantidad: int = Field(gt=0)
 # ------------------------------
 # Cliente
 # ------------------------------
@@ -71,12 +73,19 @@ class VendedorRead(VendedorBase):
 class PedidoBase(BaseModel):
     cliente_id: int
     vendedor_id: int
-    fecha: Optional[date] = None
+    fecha_envio: date
+    direccion_entrega: str
+    productos: List[ProductoCantidad]=[]
     estado: Optional[str] = "pendiente"
     total: Optional[float] = 0.0
 
 class PedidoCreate(PedidoBase):
-    pass
+    cliente_id: int
+    vendedor_id: int
+    fecha_envio: date
+    direccion_entrega: str
+    productos: List[ProductoCantidad]=[]
+    estado: Optional[str] = "pendiente"
 
 class PedidoRead(PedidoBase):
     id: int

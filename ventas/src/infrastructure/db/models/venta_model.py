@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, Boolean, Date
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from src.config.database import Base
-from sqlalchemy.dialects.postgresql import UUID
 import uuid
 
 class Producto(Base):
@@ -14,6 +14,7 @@ class Producto(Base):
     categoria = Column(String)
     promocion_activa = Column(Boolean, default=False)
 
+    # Relaciones
     detalles = relationship("DetallePedido", back_populates="producto")
     planes_venta = relationship("PlanVenta", back_populates="producto")
 
@@ -45,28 +46,32 @@ class Vendedor(Base):
 
 
 class Pedido(Base):
-    __tablename__ = 'pedidos'
+    __tablename__ = "pedidos"
 
     id = Column(Integer, primary_key=True, index=True)
-    cliente_id = Column(Integer, ForeignKey('clientes.id'))
-    vendedor_id = Column(Integer, ForeignKey('vendedores.id'))
-    fecha = Column(Date)
-    estado = Column(String)
-    total = Column(Float)
+    cliente_id = Column(Integer, ForeignKey("clientes.id"), nullable=False)
+    vendedor_id = Column(Integer, ForeignKey("vendedores.id"), nullable=False)
+    fecha_envio = Column(Date, nullable=False)
+    direccion_entrega = Column(String, nullable=False)
+    estado = Column(String, nullable=False, default="pendiente")
 
     cliente = relationship("Cliente", back_populates="pedidos")
     vendedor = relationship("Vendedor", back_populates="pedidos")
-    detalles = relationship("DetallePedido", back_populates="pedido", cascade="all, delete-orphan")
+    detalles = relationship(
+        "DetallePedido",
+        back_populates="pedido",
+        cascade="all, delete-orphan"
+    )
 
 
 class DetallePedido(Base):
-    __tablename__ = 'detalle_pedido'
+    __tablename__ = "detalle_pedido"
 
     id = Column(Integer, primary_key=True, index=True)
-    pedido_id = Column(Integer, ForeignKey('pedidos.id'))
-    producto_id = Column(UUID(as_uuid=True), ForeignKey('productos.id'))
-    cantidad = Column(Integer)
-    precio_unitario = Column(Float)
+    pedido_id = Column(Integer, ForeignKey("pedidos.id"), nullable=False)
+    producto_id = Column(UUID(as_uuid=True), ForeignKey("productos.id"), nullable=False)
+    cantidad = Column(Integer, nullable=False)
+    precio_unitario = Column(Float, nullable=False)
 
     pedido = relationship("Pedido", back_populates="detalles")
     producto = relationship("Producto", back_populates="detalles")
@@ -83,3 +88,4 @@ class PlanVenta(Base):
 
     vendedor = relationship("Vendedor", back_populates="planes_venta")
     producto = relationship("Producto", back_populates="planes_venta")
+    

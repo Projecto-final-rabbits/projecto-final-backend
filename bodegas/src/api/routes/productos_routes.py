@@ -16,6 +16,7 @@ from typing import Optional
 
 router = APIRouter(prefix="/productos", tags=["Productos"])
 
+
 @router.post("/", response_model=ProductoRead)
 def crear_producto(producto: ProductoCreate, db: Session = Depends(get_db)):
     repo = ProductoRepository(db)
