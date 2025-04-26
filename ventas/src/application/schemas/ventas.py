@@ -1,12 +1,14 @@
-
 from datetime import date
 from typing import List, Optional
 from pydantic import BaseModel, Field
+from uuid import UUID
 
 # ------------------------------
 # Producto
 # ------------------------------
+
 class ProductoBase(BaseModel):
+    id: Optional[UUID] = None
     nombre: str
     descripcion: Optional[str] = None
     precio_venta: float
@@ -17,15 +19,18 @@ class ProductoCreate(ProductoBase):
     pass
 
 class ProductoRead(ProductoBase):
-    id: int
+    id: UUID
 
     class Config:
         from_attributes = True
 
-
+class ProductoCantidad(BaseModel):
+    producto_id: UUID  # usa int para mantener consistencia con PK de la tabla productos
+    cantidad: int = Field(gt=0)
 # ------------------------------
 # Cliente
 # ------------------------------
+
 class ClienteBase(BaseModel):
     nombre: str
     tipo_cliente: Optional[str] = None
@@ -42,10 +47,10 @@ class ClienteRead(ClienteBase):
     class Config:
         from_attributes = True
 
-
 # ------------------------------
 # Vendedor
 # ------------------------------
+
 class VendedorBase(BaseModel):
     nombre: str
     zona: Optional[str] = None
@@ -61,39 +66,35 @@ class VendedorRead(VendedorBase):
     class Config:
         from_attributes = True
 
-
 # ------------------------------
-# Pedido  ←─ aquí va el cambio
+# Pedido
 # ------------------------------
-class ProductoCantidad(BaseModel):
-    producto_id: int  # usa int para mantener consistencia con PK de la tabla productos
-    cantidad: int = Field(gt=0)
 
-class PedidoCreate(BaseModel):
+class PedidoBase(BaseModel):
     cliente_id: int
     vendedor_id: int
     fecha_envio: date
     direccion_entrega: str
-    productos: List[ProductoCantidad]
+    productos: List[ProductoCantidad]=[]
+    estado: Optional[str] = "pendiente"
+    total: Optional[float] = 0.0
 
-class PedidoRead(BaseModel):
+class PedidoCreate(PedidoBase):
+    pass
+
+class PedidoRead(PedidoBase):
     id: int
-    cliente_id: int
-    vendedor_id: int
-    fecha_envio: date
-    direccion_entrega: str
-    estado: str
 
     class Config:
         from_attributes = True
 
-
 # ------------------------------
 # DetallePedido
 # ------------------------------
+
 class DetallePedidoBase(BaseModel):
     pedido_id: int
-    producto_id: int
+    producto_id: UUID
     cantidad: int
     precio_unitario: float
 
@@ -106,18 +107,19 @@ class DetallePedidoRead(DetallePedidoBase):
     class Config:
         from_attributes = True
 
-
 # ------------------------------
 # PlanVenta
 # ------------------------------
+
 class PlanVentaBase(BaseModel):
     vendedor_id: int
-    producto_id: int
+    producto_id: UUID
     cuota: int
     periodo: str
 
-class PlanVentaCreate(PlanVentaBase):
+class PlanVentaCreate(PlanVentaBase): 
     pass
+
 
 class PlanVentaRead(PlanVentaBase):
     id: int

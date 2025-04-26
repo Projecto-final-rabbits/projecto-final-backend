@@ -1,45 +1,44 @@
+# src/infrastructure/messaging/pubsub.py
+
+import os
+import json
 from google.cloud import pubsub_v1
 from google.oauth2 import service_account
-import os
-import threading
-import json
-from dotenv import load_dotenv
-
-load_dotenv("src/.env")
-
 from src.domain.events.event_type import EventType
 
+class PubSubPublisher:
+    def __init__(self):
+        creds_path       = os.getenv("GCP_PUBSUB_CREDENTIALS_PATH")
+        creds            = service_account.Credentials.from_service_account_file(creds_path)
+        self.publisher   = pubsub_v1.PublisherClient(credentials=creds)
+        self.project_id  = os.getenv("CLOUD_PROJECT_ID")
+        self.pedido_topic= os.getenv("PEDIDO_TOPIC")
+        self.bodega_topic= os.getenv("PEDIDOS_BODEGA_TOPIC")
 
-
-credentials = service_account.Credentials.from_service_account_file("src/cloud-key.json")
-publisher = pubsub_v1.PublisherClient(credentials=credentials)
-subscriber = pubsub_v1.SubscriberClient(credentials=credentials)
-
-project_id = os.getenv("CLOUD_PROJECT_ID")
-topic_id = os.getenv("PEDIDO_TOPIC")
-subscription_id = os.getenv("PEDIDO_SELLED_SUB")
-
-
-def publish_message(event_type: EventType, data: dict):
-    project_id = os.getenv("CLOUD_PROJECT_ID")
-    topic_id = os.getenv("PEDIDO_TOPIC")
-    topic_path = publisher.topic_path(project_id, topic_id)
-
-    data_str = json.dumps(data, default=str)
-    try:
-        future = publisher.publish(
+    def publish_productos(self, productos: list[dict]):
+        """
+        Publica la lista de productos (con UUIDs) en PEDIDOS_BODEGA_TOPIC.
+        """
+        topic_path = self.publisher.topic_path(self.project_id, self.bodega_topic)
+        # Usamos default=str para serializar UUIDs
+        data = json.dumps({"productos": productos}, default=str).encode("utf-8")
+        self.publisher.publish(
             topic_path,
-            data_str.encode("utf-8"),
-            event_type="PEDIDO-created"
+            data,
+            event_type=EventType.bodega_product_list.value
         )
-        future.result()
-        print("✅ Mensaje publicado correctamente.")
-    except Exception as e:
-        print(f"🚨 Error al publicar en Pub/Sub: {e}")
-        raise
+        print(f"✅ Publicado productos en topic '{self.bodega_topic}'")
 
-
-def subscribe_to_topic(callback):
-    subscription_path = subscriber.subscription_path(project_id, subscription_id)
-    streaming_pull_future = subscriber.subscribe(subscription_path, callback=callback)
-    threading.Thread(target=streaming_pull_future.result).start()
+    def publish_pedido(self, pedido: dict):
+        """
+        Publica el pedido completo en PEDIDO_TOPIC.
+        """
+        topic_path = self.publisher.topic_path(self.project_id, self.pedido_topic)
+        # default=str para serializar cualquier UUID o date
+        data = json.dumps(pedido, default=str).encode("utf-8")
+        self.publisher.publish(
+            topic_path,
+            data,
+            event_type=EventType.pedido_created.value
+        )
+        print(f"✅ Publicado pedido en topic '{self.pedido_topic}'")

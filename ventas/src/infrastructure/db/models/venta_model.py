@@ -1,16 +1,22 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, Boolean, Date
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from src.config.database import Base
+import uuid
+
 
 class Producto(Base):
     __tablename__ = 'productos'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     nombre = Column(String, nullable=False)
     descripcion = Column(String)
     precio_venta = Column(Float)
     categoria = Column(String)
     promocion_activa = Column(Boolean, default=False)
+
+    # Relaciones
+    detalles = relationship("DetallePedido", back_populates="producto")
     planes_venta = relationship("PlanVenta", back_populates="producto")
 
 
@@ -35,10 +41,11 @@ class Vendedor(Base):
     zona = Column(String)
     email = Column(String)
     telefono = Column(String)
+
+    pedidos = relationship("Pedido", back_populates="vendedor")
     planes_venta = relationship("PlanVenta", back_populates="vendedor")
 
 
-# ─────────────────────────────────────────── Pedido ──
 class Pedido(Base):
     __tablename__ = "pedidos"
 
@@ -50,22 +57,25 @@ class Pedido(Base):
     estado = Column(String, nullable=False, default="pendiente")
 
     cliente = relationship("Cliente", back_populates="pedidos")
-    vendedor = relationship("Vendedor")
+    vendedor = relationship("Vendedor", back_populates="pedidos")
     detalles = relationship(
-        "DetallePedido", back_populates="pedido", cascade="all, delete-orphan"
+        "DetallePedido",
+        back_populates="pedido",
+        cascade="all, delete-orphan"
     )
 
-# src/infrastructure/db/models/venta_model.py
+
 class DetallePedido(Base):
     __tablename__ = "detalle_pedido"
 
-    id          = Column(Integer, primary_key=True, index=True)
-    pedido_id   = Column(Integer, ForeignKey("pedidos.id"), nullable=False)
-    producto_id = Column(Integer, nullable=False)  
-    cantidad    = Column(Integer, nullable=False)
+    id = Column(Integer, primary_key=True, index=True)
+    pedido_id = Column(Integer, ForeignKey("pedidos.id"), nullable=False)
+    producto_id = Column(UUID(as_uuid=True), ForeignKey("productos.id"), nullable=False)
+    cantidad = Column(Integer, nullable=False)
+    precio_unitario = Column(Float, nullable=False)
 
     pedido = relationship("Pedido", back_populates="detalles")
-
+    producto = relationship("Producto", back_populates="detalles")
 
 
 class PlanVenta(Base):
@@ -73,9 +83,10 @@ class PlanVenta(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     vendedor_id = Column(Integer, ForeignKey('vendedores.id'))
-    producto_id = Column(Integer, ForeignKey('productos.id'))
+    producto_id = Column(UUID(as_uuid=True), ForeignKey('productos.id'))
     cuota = Column(Integer)
     periodo = Column(String)
 
     vendedor = relationship("Vendedor", back_populates="planes_venta")
     producto = relationship("Producto", back_populates="planes_venta")
+    

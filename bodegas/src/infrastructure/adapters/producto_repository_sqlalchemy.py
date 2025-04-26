@@ -32,3 +32,15 @@ class ProductoRepository:
     
     def obtener_por_proveedor(self, proveedor_id: int):
         return self.db.query(Producto).filter(Producto.proveedor_id == str(proveedor_id)).all()
+    
+    
+    def descontar_stock(self, producto_id: int, cantidad: int) -> None:
+        producto = self.db.get(Producto, producto_id)
+        if not producto:
+            raise ValueError(f"Producto {producto_id} no existe")
+
+        if producto.stock < cantidad:
+            raise ValueError(f"Stock insuficiente ({producto.stock} < {cantidad})")
+
+        producto.stock -= cantidad
+        # No commit aquí: lo hace el calle

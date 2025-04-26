@@ -1,89 +1,104 @@
 # src/application/services/crear_pedido_con_detalle.py
-from src.application.schemas.ventas import PedidoCreate, PedidoRead
+
+import httpx
+import os
+from dotenv import load_dotenv
+
+from src.application.schemas.ventas import PedidoCreate, PedidoRead, ProductoCreate
 from src.infrastructure.db.models.venta_model import Pedido, DetallePedido
 from src.infrastructure.adapters.pedido_repository_sqlalchemy import PedidoRepositorySQLAlchemy
-from src.infrastructure.adapters.out.pubsub_event_publisher import PubsubEventPublisher
-from src.domain.events.event_type import EventType
+from src.infrastructure.adapters.producto_repository_sqlalchemy import ProductoRepositorySQLAlchemy
+from src.infrastructure.messaging.pubsub import PubSubPublisher
+
+load_dotenv("src/.env")
+BODEGAS_BASE_URL = os.getenv("BODEGAS_BASE_URL")
+
 
 class CrearPedidoConDetalleService:
-    """
-    • Crea el pedido
-    • Inserta N registros en detalle_pedido
-    • Publica dos eventos:
-         EventType.bodega_product_list   → {"productos": [...]}
-         EventType.clientes_pedido_total → pedido completo
-    """
+    @staticmethod
+    def _fetch_producto_desde_bodega(producto_id: str) -> dict:
+        resp = httpx.get(f"{BODEGAS_BASE_URL}/productos/{producto_id}")
+        resp.raise_for_status()
+        return resp.json()
 
-    def __init__(self, repo: PedidoRepositorySQLAlchemy, publisher: PubsubEventPublisher):
-        self.repo = repo
-        self.publisher = publisher
+    def __init__(self, repo: PedidoRepositorySQLAlchemy):
+        self.repo       = repo
+        self.prod_repo  = ProductoRepositorySQLAlchemy()
+        self.publisher  = PubSubPublisher()
 
     def execute(self, dto: PedidoCreate) -> PedidoRead:
-        # 1. Instanciar ORM Pedido
+        # 1) Crear Pedido
         pedido_orm = Pedido(
-            cliente_id=dto.cliente_id,
-            vendedor_id=dto.vendedor_id,
-            fecha_envio=dto.fecha_envio,
+            cliente_id=       dto.cliente_id,
+            vendedor_id=      dto.vendedor_id,
+            fecha_envio=      dto.fecha_envio,
             direccion_entrega=dto.direccion_entrega,
-            estado="pendiente",
+            estado=           "pendiente",
         )
+        self.repo.add_pedido(pedido_orm)
+        db = self.repo.db
 
         try:
-            # 2. Guardar Pedido y obtener id
-            self.repo.add_pedido(pedido_orm)  # flush: id ya disponible
+            # 2) Upsert Productos y DetallePedido
+            for p in dto.productos:
+                pid = p.producto_id
+                local = self.prod_repo.obtener_por_id(db, pid)
+                if not local:
+                    data = self._fetch_producto_desde_bodega(pid)
+                    schema = ProductoCreate(
+                        id=              data["id"],
+                        nombre=          data["nombre"],
+                        descripcion=     data.get("descripcion"),
+                        precio_venta=    float(data["precio_venta"]),
+                        categoria=       data.get("categoria"),
+                        promocion_activa=data.get("promocion_activa", False),
+                    )
+                    local = self.prod_repo.guardar(db, schema)
+                    db.flush()
 
-            # 3. Insertar cada DetallePedido
-            for prod in dto.productos:
                 detalle = DetallePedido(
-                    pedido_id=pedido_orm.id,
-                    producto_id=prod.producto_id,
-                    cantidad=prod.cantidad,
+                    pedido_id=      pedido_orm.id,
+                    producto_id=    pid,
+                    cantidad=       p.cantidad,
+                    precio_unitario=local.precio_venta,
                 )
                 self.repo.add_detalle(detalle)
 
-            # 4. Commit atómico
+            # 3) Commit atómico
             self.repo.commit()
 
         except Exception:
             self.repo.rollback()
             raise
 
-        # 5. Publicar eventos
-        self._publish_events(dto, pedido_orm.id)
-
-        # 6. Devolver DTO de lectura
-        return PedidoRead(
-            id=pedido_orm.id,
-            cliente_id=pedido_orm.cliente_id,
-            vendedor_id=pedido_orm.vendedor_id,
-            fecha_envio=pedido_orm.fecha_envio,
-            direccion_entrega=pedido_orm.direccion_entrega,
-            estado=pedido_orm.estado,
-            productos=dto.productos,
-        )
-
-    # --------------------------------------------------------------
-    # Helpers
-    # --------------------------------------------------------------
-    def _publish_events(self, dto: PedidoCreate, pedido_id: int) -> None:
-        # a) mensaje para BODEGA: solo lista de productos
+        # 4) Publicar eventos **por separado**
         solo_productos = [
             {"producto_id": p.producto_id, "cantidad": p.cantidad}
             for p in dto.productos
         ]
-        self.publisher.publish(EventType.bodega_product_list, {"productos": solo_productos})
 
-        # b) mensaje para CLIENTES: pedido completo
+        # 4.a) lista de productos → PEDIDOS_BODEGA_TOPIC
+        self.publisher.publish_productos(solo_productos)
+
+        # 4.b) pedido completo → PEDIDO_TOPIC
         pedido_total = {
-            "pedido_id": pedido_id,
-            "cliente_id": dto.cliente_id,
-            "vendedor_id": dto.vendedor_id,
-            "fecha_envio": str(dto.fecha_envio),
-            "direccion_entrega": dto.direccion_entrega,
-            "estado": "pendiente",
-            "productos": solo_productos,
+            "pedido_id":        pedido_orm.id,
+            "cliente_id":       dto.cliente_id,
+            "vendedor_id":      dto.vendedor_id,
+            "fecha_envio":      str(dto.fecha_envio),
+            "direccion_entrega":dto.direccion_entrega,
+            "estado":           "pendiente",
+            "productos":        solo_productos,
         }
-        self.publisher.publish(EventType.clientes_pedido_total, pedido_total)
+        self.publisher.publish_pedido(pedido_total)
 
-        # c) (opcional) mantiene el evento histórico
-        self.publisher.publish(EventType.pedido_created, pedido_total)
+        # 5) Retornar DTO de lectura
+        return PedidoRead(
+            id=                pedido_orm.id,
+            cliente_id=        pedido_orm.cliente_id,
+            vendedor_id=       pedido_orm.vendedor_id,
+            fecha_envio=       pedido_orm.fecha_envio,
+            direccion_entrega= pedido_orm.direccion_entrega,
+            estado=            pedido_orm.estado,
+            productos=         dto.productos,
+        )
