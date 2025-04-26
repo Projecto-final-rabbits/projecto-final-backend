@@ -56,3 +56,15 @@ class InventarioRepository:
         #     descripcion="Salida por pedido (Pub/Sub)"
         # )
         # self.db.add(movimiento)
+    
+    def obtener_por_producto_y_bodega(self, producto_id, bodega_id):
+        return self.db.query(Inventario).filter(
+            Inventario.producto_id == producto_id,
+            Inventario.bodega_id == bodega_id
+        ).first()
+
+    def actualizar(self, inventario: Inventario):
+        self.db.add(inventario)
+        self.db.commit()
+        self.db.refresh(inventario)
+        return inventario

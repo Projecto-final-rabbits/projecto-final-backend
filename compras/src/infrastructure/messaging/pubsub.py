@@ -11,12 +11,12 @@ from src.domain.events.event_type import EventType
 
 json_str = os.getenv("cloud-key-json")
 if not json_str:
-    raise RuntimeError("GCP_PUBSUB_CREDENTIALS_PATH is not set")
+   raise RuntimeError("GCP_PUBSUB_CREDENTIALS_PATH is not set")
 
 service_account_info = json.loads(json_str)
 credentials = service_account.Credentials.from_service_account_info(service_account_info)
 
-##credentials = service_account.Credentials.from_service_account_file("src/cloud-key.json")
+#credentials = service_account.Credentials.from_service_account_file("src/cloud-key.json")
 publisher = pubsub_v1.PublisherClient(credentials=credentials)
 subscriber = pubsub_v1.SubscriberClient(credentials=credentials)
 
@@ -35,10 +35,10 @@ def publish_message(event_type: EventType, data: dict):
         future = publisher.publish(
             topic_path,
             data_str.encode("utf-8"),
-            event_type="product-created"
+            event_type="product-sync-compras"
         )
         future.result()
-        print("✅ Mensaje publicado correctamente.")
+        print("✅ Mensaje de producto syncronizado en compras publicado correctamente.")
     except Exception as e:
         print(f"🚨 Error al publicar en Pub/Sub: {e}")
         raise

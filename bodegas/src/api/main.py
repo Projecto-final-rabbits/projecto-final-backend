@@ -4,8 +4,9 @@ from src.infrastructure.adapters.in_events.pubsub_ventas_event_productos_subscri
 from src.infrastructure.messaging.pubsub_ventas_productos_subscriber import PubSubVentasProductosSubscriber
 from src.api.routes.bodegas_routes import router as bodegas_router
 from src.api.routes.productos_routes import router as productos_router
+from src.api.routes.movimientos_routes import router as movimientos_router
+from src.api.routes.inventarios_routes import router as inventario_router
 
-# comment
 from src.config.database import Base, engine
 
 app = FastAPI()
@@ -19,6 +20,8 @@ app.add_middleware(
 
 app.include_router(bodegas_router)
 app.include_router(productos_router)
+app.include_router(movimientos_router)
+app.include_router(inventario_router)
 
 def _start_pubsub_listener() -> None:
     handler = VentasProductosHandler()

@@ -4,7 +4,6 @@ from sqlalchemy.orm import relationship
 from src.config.database import Base
 import uuid
 
-
 class Producto(Base):
     __tablename__ = 'productos'
 

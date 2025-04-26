@@ -18,6 +18,9 @@ def get_db():
 
 @router.post("/", response_model=ProveedorRead)
 def crear_proveedor(proveedor: ProveedorCreate, db: Session = Depends(get_db)):
+    proveedor_existente = repo.obtener_por_nombre(db, proveedor.nombre)
+    if proveedor_existente:
+        raise HTTPException(status_code=400, detail="Ya existe un proveedor con ese nombre")
     return repo.guardar(db, proveedor)
 
 @router.get("/", response_model=List[ProveedorRead])

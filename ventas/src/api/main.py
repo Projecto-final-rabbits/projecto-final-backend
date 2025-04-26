@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from src.api.routes.ventas_routes import router as ventas_router
 from src.api.routes.productos_routes import router as productos_router
 from src.api.routes.clientes_routes import router as clientes_router
@@ -7,10 +8,25 @@ from src.api.routes.pedidos_routes import router as pedidos_router
 from src.api.routes.detalles_routes import router as detalles_router
 from src.api.routes.planes_venta_routes import router as planes_venta_router
 
+import os
+
 # comment
 from src.config.database import Base, engine
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
+
+if os.getenv("TESTING") != "true":
+    from src.infrastructure.messaging.pubsub import subscribe_to_topic
+    from src.infrastructure.messaging.handlers import handle_product_created
+    print("🚀 Iniciando suscripción a Pub/Sub desde VENTAS")
+    subscribe_to_topic(callback=handle_product_created)
 
 app.include_router(ventas_router)
 app.include_router(productos_router)

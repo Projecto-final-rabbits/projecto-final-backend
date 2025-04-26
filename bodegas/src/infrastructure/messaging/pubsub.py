@@ -43,7 +43,6 @@ def publish_message(event_type: EventType, data: dict):
         print(f"🚨 Error al publicar en Pub/Sub: {e}")
         raise
 
-
 def subscribe_to_topic(callback):
     subscription_path = subscriber.subscription_path(project_id, subscription_id)
     streaming_pull_future = subscriber.subscribe(subscription_path, callback=callback)
