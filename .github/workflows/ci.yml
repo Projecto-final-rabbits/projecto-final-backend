@@ -225,6 +225,7 @@ jobs:
             --set-env-vars=CLOUD_PROJECT_ID=${{ secrets.CLOUD_PROJECT_ID }} \
             --set-env-vars=PRODUCT_TOPIC=${{ secrets.PRODUCT_TOPIC }} \
             --set-env-vars=PRODUCT_VENTAS_SUB=${{ secrets.PRODUCT_VENTAS_SUB }} \
+            --set-env-vars=PEDIDOS_BODEGA_TOPIC=${{ secrets.PEDIDOS_BODEGA_TOPIC }} \
             --update-secrets=cloud-key-json=cloud-key-pubsub:latest 
 
   clientes-tests:

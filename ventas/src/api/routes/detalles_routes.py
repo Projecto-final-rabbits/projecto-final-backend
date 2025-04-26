@@ -16,6 +16,7 @@ def get_db():
     finally:
         db.close()
 
+
 @router.post("/", response_model=DetallePedidoRead)
 def crear_detalle(detalle: DetallePedidoCreate, db: Session = Depends(get_db)):
     return repo.guardar(db, detalle)
