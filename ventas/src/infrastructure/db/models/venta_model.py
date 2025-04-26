@@ -1,11 +1,13 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, Boolean, Date
 from sqlalchemy.orm import relationship
 from src.config.database import Base
+from sqlalchemy.dialects.postgresql import UUID
+import uuid
 
 class Producto(Base):
     __tablename__ = 'productos'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     nombre = Column(String, nullable=False)
     descripcion = Column(String)
     precio_venta = Column(Float)
@@ -62,7 +64,7 @@ class DetallePedido(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     pedido_id = Column(Integer, ForeignKey('pedidos.id'))
-    producto_id = Column(Integer, ForeignKey('productos.id'))
+    producto_id = Column(UUID(as_uuid=True), ForeignKey('productos.id'))
     cantidad = Column(Integer)
     precio_unitario = Column(Float)
 
@@ -75,7 +77,7 @@ class PlanVenta(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     vendedor_id = Column(Integer, ForeignKey('vendedores.id'))
-    producto_id = Column(Integer, ForeignKey('productos.id'))
+    producto_id = Column(UUID(as_uuid=True), ForeignKey('productos.id'))
     cuota = Column(Integer)
     periodo = Column(String)
 

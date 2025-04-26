@@ -1,5 +1,5 @@
 def test_crear_cliente_y_vendedor_para_detalle(client):
-    # Cliente
+    # Crear cliente
     response = client.post("/clientes/", json={
         "nombre": "Cliente Detalle",
         "tipo_cliente": "mayorista",
@@ -8,8 +8,9 @@ def test_crear_cliente_y_vendedor_para_detalle(client):
         "email": "cliente@detalle.com"
     })
     assert response.status_code == 200
+    cliente_id = response.json()["id"]
 
-    # Vendedor
+    # Crear vendedor
     response = client.post("/vendedores/", json={
         "nombre": "Vendedor Detalle",
         "zona": "Centro",
@@ -17,34 +18,37 @@ def test_crear_cliente_y_vendedor_para_detalle(client):
         "email": "vendedor@detalle.com"
     })
     assert response.status_code == 200
+    vendedor_id = response.json()["id"]
 
-def test_crear_producto_para_detalle(client):
-
-    # Producto
-    response = client.post("/productos/", json={
-        "nombre": "Mouse",
-        "descripcion": "Mouse óptico",
-        "precio_venta": 50.0,
-        "stock": 100,
-        "categoria": "Periféricos",
-        "proveedor_id": 1
-    })
-    assert response.status_code == 200
-
-def test_crear_pedido_para_detalle(client):
+    # Crear pedido
     response = client.post("/pedidos/", json={
-        "cliente_id": 1,
-        "vendedor_id": 1,
-        "fecha_pedido": "2025-04-02",
+        "cliente_id": cliente_id,
+        "vendedor_id": vendedor_id,
+        "fecha": "2025-04-02",
         "estado": "pendiente",
         "total": 50.0
     })
     assert response.status_code == 200
+    global pedido_id
+    pedido_id = response.json()["id"]
+
+def test_crear_producto_para_detalle(client):
+    # Crear producto
+    response = client.post("/productos/", json={
+        "nombre": "Mouse",
+        "descripcion": "Mouse óptico",
+        "precio_venta": 50.0,
+        "categoria": "Periféricos",
+        "promocion_activa": False
+    })
+    assert response.status_code == 200
+    global producto_id
+    producto_id = response.json()["id"]
 
 def test_crear_detalle_pedido(client):
     response = client.post("/detalles/", json={
-        "pedido_id": 1,
-        "producto_id": 1,
+        "pedido_id": pedido_id,
+        "producto_id": producto_id,
         "cantidad": 2,
         "precio_unitario": 50.0
     })

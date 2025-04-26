@@ -22,7 +22,7 @@ subscriber = pubsub_v1.SubscriberClient(credentials=credentials)
 
 project_id = os.getenv("CLOUD_PROJECT_ID")
 topic_id = os.getenv("PRODUCT_TOPIC")
-subscription_id = os.getenv("PRODUCT_TOPIC_SUB")
+subscription_id = os.getenv("PRODUCT_VENTAS_SUB")
 
 
 def publish_message(event_type: EventType, data: dict):
@@ -35,10 +35,10 @@ def publish_message(event_type: EventType, data: dict):
         future = publisher.publish(
             topic_path,
             data_str.encode("utf-8"),
-            event_type="product-sync-compras"
+            event_type="product-sync-ventas"
         )
         future.result()
-        print("✅ Mensaje de producto syncronizado en compras publicado correctamente.")
+        print("✅ Mensaje de producto syncronizado en ventas publicado correctamente.")
     except Exception as e:
         print(f"🚨 Error al publicar en Pub/Sub: {e}")
         raise

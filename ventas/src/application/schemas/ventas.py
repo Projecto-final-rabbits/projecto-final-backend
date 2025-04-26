@@ -2,12 +2,14 @@
 from datetime import date
 from typing import Optional
 from pydantic import BaseModel
+from uuid import UUID
 
 # ------------------------------
 # Producto
 # ------------------------------
 
 class ProductoBase(BaseModel):
+    id: Optional[UUID] = None
     nombre: str
     descripcion: Optional[str] = None
     precio_venta: float
@@ -18,10 +20,10 @@ class ProductoCreate(ProductoBase):
     pass
 
 class ProductoRead(ProductoBase):
-    id: int
+    id: UUID
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # ------------------------------
 # Cliente
@@ -41,7 +43,7 @@ class ClienteRead(ClienteBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # ------------------------------
 # Vendedor
@@ -60,7 +62,7 @@ class VendedorRead(VendedorBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # ------------------------------
 # Pedido
@@ -80,7 +82,7 @@ class PedidoRead(PedidoBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # ------------------------------
 # DetallePedido
@@ -88,7 +90,7 @@ class PedidoRead(PedidoBase):
 
 class DetallePedidoBase(BaseModel):
     pedido_id: int
-    producto_id: int
+    producto_id: UUID
     cantidad: int
     precio_unitario: float
 
@@ -99,7 +101,7 @@ class DetallePedidoRead(DetallePedidoBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # ------------------------------
 # PlanVenta
@@ -107,7 +109,7 @@ class DetallePedidoRead(DetallePedidoBase):
 
 class PlanVentaBase(BaseModel):
     vendedor_id: int
-    producto_id: int
+    producto_id: UUID
     cuota: int
     periodo: str
 
@@ -118,4 +120,4 @@ class PlanVentaRead(PlanVentaBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
