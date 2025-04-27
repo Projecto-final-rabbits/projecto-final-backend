@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from src.infrastructure.db.models.bodega_model import Producto
 from sqlalchemy.orm import Session
 from uuid import UUID
@@ -59,3 +60,16 @@ class ProductoRepository:
             Producto.proveedor_id == str(proveedor_id),
             Producto.categoria == categoria
         ).all()
+
+    def actualizar(self, id_: str, campos: dict):
+        """
+        Actualiza sólo los campos que vienen en `campos`.
+        """
+        producto = self.obtener_por_id(id_)
+        if not producto:
+            raise HTTPException(status_code=404, detail="Producto no encontrado")
+        for attr, valor in campos.items():
+            setattr(producto, attr, valor)
+        self.db.commit()
+        self.db.refresh(producto)
+        return producto
