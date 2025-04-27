@@ -1,3 +1,4 @@
+from datetime import date
 from pydantic import BaseModel
 from typing import List, Optional
 
@@ -62,20 +63,22 @@ class TiendaRead(TiendaBase):
         from_attributes = True
 
 
-# Schemas para Pedido
+# --- Schemas para Pedido ---
 class PedidoBase(BaseModel):
-    estado: str
-    direccion_entrega_id: int
+    cliente_id: int
+    vendedor_id: int
+    fecha_envio: date
+    direccion_entrega: str
+    estado: str = "pendiente"
 
 class PedidoCreate(PedidoBase):
-    cliente_id: int
+    pass
 
 class PedidoRead(PedidoBase):
     id: int
-    cliente_id: int
 
     class Config:
-        from_attributes = True
+        from_attributes = True  # para que from_orm() funcione
 
 
 # Schemas para Cliente

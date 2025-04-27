@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Date, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from src.config.database import Base
 
@@ -41,10 +41,6 @@ class DireccionEntrega(Base):
 
     cliente = relationship("Cliente", back_populates="direccion_entregas")
 
-    # Aquí agregamos la relación de pedidos en DirecciónEntrega
-    pedidos = relationship("Pedido", back_populates="direccion_entrega")
-
-
 class Tienda(Base):
     __tablename__ = 'tiendas'
 
@@ -61,11 +57,9 @@ class Pedido(Base):
     __tablename__ = 'pedidos'
 
     id = Column(Integer, primary_key=True, index=True)
-    cliente_id = Column(Integer, ForeignKey('clientes.id'))
-    direccion_entrega_id = Column(Integer, ForeignKey('direccion_entrega.id'))
-    estado = Column(String)
-
+    cliente_id = Column(Integer, ForeignKey("clientes.id"), nullable=False)
+    vendedor_id = Column(Integer, nullable=False)
+    fecha_envio = Column(Date, nullable=False)
+    direccion_entrega = Column(String, nullable=False)
+    estado = Column(String, nullable=False, default="pendiente")
     cliente = relationship("Cliente", back_populates="pedidos")
-    
-    # Relación con DireccionEntrega (agregado back_populates)
-    direccion_entrega = relationship("DireccionEntrega", back_populates="pedidos")

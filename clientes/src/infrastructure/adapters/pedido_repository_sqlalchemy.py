@@ -1,9 +1,11 @@
+# src/infrastructure/adapters/pedido_repository_sqlalchemy.py
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from src.infrastructure.db.models.cliente_model import Pedido
 from src.application.schemas.clientes import PedidoCreate
 
 class PedidoRepositorySQLAlchemy:
+
     def guardar(self, db: Session, data: PedidoCreate) -> Pedido:
         pedido = Pedido(**data.dict())
         db.add(pedido)
