@@ -87,19 +87,14 @@ class PubSubSubscriber:
         )
 
         def _wrapper(msg: pubsub_v1.subscriber.message.Message):
-            msg_id = getattr(msg, "message_id", "<unknown>")
-            try:
-                payload = json.loads(msg.data.decode("utf-8"))
-            except json.JSONDecodeError as e:
-                print(f"[{msg_id}] JSON inválido: {e}")
-                return msg.nack()
-            try:
-                callback(payload)
-                msg.ack()
-                print(f"[{msg_id}] Procesado productos y ACK enviado.")
-            except Exception as e:
-                print(f"[{msg_id}] Error procesando productos: {e}")
-                msg.nack()
+                msg_id = getattr(msg, "message_id", "<unknown>")
+                try:
+                    payload = json.loads(msg.data.decode("utf-8"))
+                    msg.payload = payload
+                    callback(msg)
+                except json.JSONDecodeError as e:
+                    print(f"[{msg_id}] JSON inválido: {e}")
+                    return msg.nack()
 
         future = self.subscriber.subscribe(sub_path, callback=_wrapper)
         print(f"🔔 Suscrito a '{self.product_sub}'")
