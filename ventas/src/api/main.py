@@ -18,6 +18,7 @@ from src.api.routes.planes_venta_routes import router as planes_venta_router
 from src.config.database import Base, engine
 from src.infrastructure.messaging.pubsub import PubSubSubscriber
 
+
 # Carga .env
 load_dotenv("src/.env")
 
