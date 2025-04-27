@@ -54,10 +54,6 @@ def on_startup():
     Base.metadata.create_all(bind=engine)
     print("✅ Tablas listas.")
 
-    # 2) Arrancar el subscriber de productos
-  
-    print("🚀 Subscriber de productos iniciado.")
-
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("src.main:app", host="0.0.0.0", port=8001, reload=True)
