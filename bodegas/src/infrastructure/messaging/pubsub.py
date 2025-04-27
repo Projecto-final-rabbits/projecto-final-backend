@@ -22,7 +22,7 @@ subscriber = pubsub_v1.SubscriberClient(credentials=credentials)
 
 project_id = os.getenv("CLOUD_PROJECT_ID")
 topic_id = os.getenv("PRODUCT_TOPIC")
-subscription_id = os.getenv("PRODUCT_SELLED_SUB")
+subscription_id = os.getenv("PEDIDOS_BODEGA_SUB")
 
 
 def publish_message(event_type: EventType, data: dict):
