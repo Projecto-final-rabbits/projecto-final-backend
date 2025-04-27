@@ -10,6 +10,7 @@ from src.infrastructure.adapters.pedido_repository_sqlalchemy import PedidoRepos
 from src.application.schemas.ventas import PedidoCreate, PedidoRead, ProductoCantidad
 from src.application.services.clientes_service import cliente_existe
 from src.application.services.crear_pedido_detalle_service import CrearPedidoConDetalleService
+from src.application.services.bodega_service import producto_en_stock
 
 router = APIRouter(prefix="/pedidos", tags=["Pedidos"])
 
@@ -31,9 +32,21 @@ def crear_pedido(
     pedido_in: PedidoCreate,
     db: Session = Depends(get_db)
 ):
+    # 1) Asegurarnos de que el cliente existe
     if not cliente_existe(pedido_in.cliente_id):
         raise HTTPException(status_code=404, detail="Cliente no encontrado")
 
+    # 2) Validar stock para cada producto solicitado
+    for item in pedido_in.productos:
+        # item.producto_id es UUID, item.cantidad es int
+        if not producto_en_stock(item.producto_id, item.cantidad):
+            raise HTTPException(
+                status_code=400,
+                detail=f"Stock insuficiente para producto {item.producto_id}. "
+                       f"Se solicitaron {item.cantidad} unidades."
+            )
+
+    # 3) Si todo pasó, creamos el pedido
     repo = PedidoRepositorySQLAlchemy(db)
     servicio = CrearPedidoConDetalleService(repo)
     return servicio.execute(pedido_in)
