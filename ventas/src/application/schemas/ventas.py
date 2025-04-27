@@ -77,7 +77,7 @@ class PedidoBase(BaseModel):
     direccion_entrega: str
     productos: List[ProductoCantidad]=[]
     estado: Optional[str] = "pendiente"
-    total: Optional[float] = 0.0
+    total: Optional[float] 
 
 class PedidoCreate(PedidoBase):
     cliente_id: int

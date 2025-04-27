@@ -41,7 +41,7 @@ from src.infrastructure.adapters.inventario_repository_sqlalchemy import Inventa
 
 def ventas_productos_handler(message):
     try:
-        print("📩 Mensaje recibido en COMPRAS:", flush=True)
+        print("📩 Mensaje recibido en Bodega de pedido creado:", flush=True)
         data = json.loads(message.data.decode("utf-8"))
         print(f"🧾 Data: {data}", flush=True)
 
