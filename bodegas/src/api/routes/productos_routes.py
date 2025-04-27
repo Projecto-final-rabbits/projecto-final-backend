@@ -5,7 +5,7 @@ from uuid import UUID
 
 from src.config.database import SessionLocal
 from src.infrastructure.db.models.bodega_model import Producto
-from src.application.schemas.bodegas import ProductoCreate, ProductoRead
+from src.application.schemas.bodegas import ProductoCreate, ProductoRead, ProductoUpdate
 from src.infrastructure.adapters.producto_repository_sqlalchemy import ProductoRepository
 from src.application.services.proveedores_service import proveedor_existe
 
@@ -93,3 +93,19 @@ def eliminar_productos(db: Session = Depends(get_db)):
     repo = ProductoRepository(db)
     repo.eliminar_todos()
     return {"message": "Productos eliminados"}
+
+@router.patch("/{producto_id}", response_model=ProductoRead)
+def editar_producto(
+    producto_id: UUID,
+    cambios: ProductoUpdate,
+    db: Session = Depends(get_db)
+):
+    repo = ProductoRepository(db)
+    # 1) Validar existencia
+    existente = repo.obtener_por_id(str(producto_id))
+    if not existente:
+        raise HTTPException(status_code=404, detail="Producto no encontrado")
+    # 2) Aplicar sólo los campos enviados
+    datos = cambios.dict(exclude_unset=True)
+    actualizado = repo.actualizar(str(producto_id), datos)
+    return actualizado
