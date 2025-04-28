@@ -24,3 +24,4 @@ class ClienteRepositorySQLAlchemy:
         db.delete(cliente)
         db.commit()
         return {"message": "Cliente eliminado"}
+
