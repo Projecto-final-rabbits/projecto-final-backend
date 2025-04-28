@@ -40,3 +40,4 @@ def pedido_created_handler(message):
     finally:
         session.close()
         print("🔒 Sesión DB cerrada", flush=True)
+
