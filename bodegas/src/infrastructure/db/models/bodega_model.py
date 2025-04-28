@@ -1,4 +1,5 @@
 import uuid
+from fastapi import HTTPException
 from sqlalchemy import Column, String, Integer, Float, Date, ForeignKey, Enum, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
@@ -44,8 +45,8 @@ class Inventario(Base):
     __tablename__ = 'inventarios'
 
     id = Column(Integer, primary_key=True, index=True)
-    producto_id = Column(UUID(as_uuid=True), ForeignKey('productos.id'))
-    bodega_id = Column(Integer, ForeignKey('bodegas.id'))
+    producto_id = Column(UUID(as_uuid=True), ForeignKey('productos.id'), nullable=False)
+    bodega_id = Column(Integer, ForeignKey('bodegas.id'), nullable=False)
     cantidad_disponible = Column(Integer)
 
     producto = relationship("Producto", back_populates="inventarios")
@@ -56,10 +57,12 @@ class MovimientoInventario(Base):
     __tablename__ = 'movimientos_inventario'
 
     id = Column(Integer, primary_key=True, index=True)
-    producto_id = Column(UUID(as_uuid=True), ForeignKey('productos.id'))
+    producto_id = Column(UUID(as_uuid=True), ForeignKey('productos.id'), nullable=False)
+    bodega_id = Column(Integer, ForeignKey('bodegas.id'), nullable=False)
     tipo_movimiento = Column(Enum(TipoMovimientoEnum))
     cantidad = Column(Integer)
     fecha = Column(Date)
     descripcion = Column(Text)
 
     producto = relationship("Producto", back_populates="movimientos")
+    bodega = relationship("Bodega")

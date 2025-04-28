@@ -35,10 +35,10 @@ def publish_message(event_type: EventType, data: dict):
         future = publisher.publish(
             topic_path,
             data_str.encode("utf-8"),
-            event_type="product-created"
+            event_type="product-sync-compras"
         )
         future.result()
-        print("✅ Mensaje publicado correctamente.")
+        print("✅ Mensaje de producto syncronizado en compras publicado correctamente.")
     except Exception as e:
         print(f"🚨 Error al publicar en Pub/Sub: {e}")
         raise

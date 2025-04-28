@@ -34,3 +34,5 @@ def obtener_plan(plan_id: int, db: Session = Depends(get_db)):
 @router.delete("/{plan_id}")
 def eliminar_plan(plan_id: int, db: Session = Depends(get_db)):
     return repo.eliminar(db, plan_id)
+
+

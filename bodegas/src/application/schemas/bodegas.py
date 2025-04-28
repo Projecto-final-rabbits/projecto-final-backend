@@ -62,7 +62,7 @@ class InventarioCreate(InventarioBase):
 
 class InventarioRead(InventarioBase):
     id: int
-
+    cantidad_disponible: int
     class Config:
         from_attributes = True
 
@@ -78,7 +78,8 @@ class TipoMovimiento(str, Enum):
 class MovimientoInventarioBase(BaseModel):
     producto_id: UUID
     cantidad: int
-    tipo: TipoMovimiento
+    bodega_id: int
+    tipo_movimiento: TipoMovimiento
     fecha: Optional[datetime] = None
     descripcion: Optional[str] = None
 
@@ -90,3 +91,18 @@ class MovimientoInventarioRead(MovimientoInventarioBase):
 
     class Config:
         from_attributes = True
+
+class ProductoUpdate(BaseModel):
+    """
+    Todos los campos opcionales: sólo envías los que quieres modificar.
+    """
+    nombre: Optional[str] = None
+    descripcion: Optional[str] = None
+    categoria: Optional[str] = None
+    proveedor_id: Optional[int] = None
+    precio_compra: Optional[float] = None
+    precio_venta: Optional[float] = None
+    promocion_activa: Optional[bool] = None
+    fecha_vencimiento: Optional[datetime] = None
+    condicion_almacenamiento: Optional[str] = None
+    tiempo_entrega_dias: Optional[int] = None

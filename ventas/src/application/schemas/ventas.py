@@ -1,13 +1,14 @@
-
 from datetime import date
-from typing import Optional
-from pydantic import BaseModel
+from typing import List, Optional
+from pydantic import BaseModel, Field
+from uuid import UUID
 
 # ------------------------------
 # Producto
 # ------------------------------
 
 class ProductoBase(BaseModel):
+    id: Optional[UUID] = None
     nombre: str
     descripcion: Optional[str] = None
     precio_venta: float
@@ -18,11 +19,14 @@ class ProductoCreate(ProductoBase):
     pass
 
 class ProductoRead(ProductoBase):
-    id: int
+    id: UUID
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
+class ProductoCantidad(BaseModel):
+    producto_id: UUID  # usa int para mantener consistencia con PK de la tabla productos
+    cantidad: int = Field(gt=0)
 # ------------------------------
 # Cliente
 # ------------------------------
@@ -41,7 +45,7 @@ class ClienteRead(ClienteBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # ------------------------------
 # Vendedor
@@ -60,7 +64,7 @@ class VendedorRead(VendedorBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # ------------------------------
 # Pedido
@@ -69,18 +73,25 @@ class VendedorRead(VendedorBase):
 class PedidoBase(BaseModel):
     cliente_id: int
     vendedor_id: int
-    fecha: Optional[date] = None
+    fecha_envio: date
+    direccion_entrega: str
+    productos: List[ProductoCantidad]=[]
     estado: Optional[str] = "pendiente"
-    total: Optional[float] = 0.0
+    total: Optional[float] 
 
 class PedidoCreate(PedidoBase):
-    pass
+    cliente_id: int
+    vendedor_id: int
+    fecha_envio: date
+    direccion_entrega: str
+    productos: List[ProductoCantidad]=[]
+    estado: Optional[str] = "pendiente"
 
 class PedidoRead(PedidoBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # ------------------------------
 # DetallePedido
@@ -88,7 +99,7 @@ class PedidoRead(PedidoBase):
 
 class DetallePedidoBase(BaseModel):
     pedido_id: int
-    producto_id: int
+    producto_id: UUID
     cantidad: int
     precio_unitario: float
 
@@ -99,7 +110,20 @@ class DetallePedidoRead(DetallePedidoBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+# — aquí van tus esquemas existentes de ProductoRead y DetallePedidoRead —
+
+class DetallePedidoConProducto(BaseModel):
+    id: int
+    pedido_id: int
+    producto_id: UUID
+    cantidad: int
+    precio_unitario: float
+    producto: ProductoRead     # anidamos el esquema de Producto
+
+    class Config:
+        from_attributes = True
 
 # ------------------------------
 # PlanVenta
@@ -107,15 +131,34 @@ class DetallePedidoRead(DetallePedidoBase):
 
 class PlanVentaBase(BaseModel):
     vendedor_id: int
-    producto_id: int
+    producto_id: UUID
     cuota: int
     periodo: str
 
-class PlanVentaCreate(PlanVentaBase):
+class PlanVentaCreate(PlanVentaBase): 
     pass
+
 
 class PlanVentaRead(PlanVentaBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+
+# ------------------------------
+# ResumenVentas
+# ------------------------------
+class VentaProductoItem(BaseModel):
+    nombre: str
+    cantidad_total: int
+    total_ventas: float
+
+    class Config:
+        from_attributes = True
+
+class VentaReporte(BaseModel):
+    cliente_id: int
+    fecha_inicio: date
+    fecha_fin: date
+    detalle: List[VentaProductoItem]
