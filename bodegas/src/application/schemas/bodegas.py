@@ -62,7 +62,7 @@ class InventarioCreate(InventarioBase):
 
 class InventarioRead(InventarioBase):
     id: int
-
+    cantidad_disponible: int
     class Config:
         from_attributes = True
 
