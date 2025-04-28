@@ -47,3 +47,4 @@ def subscribe_to_topic(callback):
     subscription_path = subscriber.subscription_path(project_id, subscription_id)
     streaming_pull_future = subscriber.subscribe(subscription_path, callback=callback)
     threading.Thread(target=streaming_pull_future.result).start()
+
