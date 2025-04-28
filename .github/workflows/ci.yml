@@ -227,6 +227,7 @@ jobs:
             --set-env-vars=PRODUCT_VENTAS_SUB=${{ secrets.PRODUCT_VENTAS_SUB }} \
             --set-env-vars=PEDIDO_TOPIC=${{ secrets.PEDIDO_TOPIC }} \
             --set-env-vars=PEDIDOS_BODEGA_TOPIC=${{ secrets.PEDIDOS_BODEGA_TOPIC }} \
+            --set-env-vars=BODEGAS_BASE_URL=${{ secrets.BODEGAS_BASE_URL }} \
             --update-secrets=cloud-key-json=cloud-key-pubsub:latest 
 
   clientes-tests:
