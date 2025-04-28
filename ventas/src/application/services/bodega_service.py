@@ -3,6 +3,8 @@ import httpx
 import os
 from dotenv import load_dotenv
 
+from src.application.schemas.ventas import ProductoRead
+
 load_dotenv("src/.env")
 BODEGAS_BASE_URL = os.getenv("BODEGAS_BASE_URL")  # e.g. http://bodegas:8003
 
@@ -32,3 +34,9 @@ def producto_en_stock(product_id: UUID, cantidad_solicitada: int) -> bool:
     except Exception as e:
         print(f"🚨 Error inesperado al verificar stock: {e}")
         return False
+
+def fetch_producto(product_id: UUID) -> ProductoRead:
+    url = f"{BODEGAS_BASE_URL}/productos/{product_id}"
+    resp = httpx.get(url, timeout=5.0)
+    resp.raise_for_status()   # lanza HTTPError si no es 200
+    return ProductoRead(**resp.json())

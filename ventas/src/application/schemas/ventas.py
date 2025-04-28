@@ -112,6 +112,19 @@ class DetallePedidoRead(DetallePedidoBase):
     class Config:
         from_attributes = True
 
+# — aquí van tus esquemas existentes de ProductoRead y DetallePedidoRead —
+
+class DetallePedidoConProducto(BaseModel):
+    id: int
+    pedido_id: int
+    producto_id: UUID
+    cantidad: int
+    precio_unitario: float
+    producto: ProductoRead     # anidamos el esquema de Producto
+
+    class Config:
+        from_attributes = True
+
 # ------------------------------
 # PlanVenta
 # ------------------------------
