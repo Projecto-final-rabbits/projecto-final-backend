@@ -101,3 +101,4 @@ class PubSubSubscriber:
             threading.Thread(target=future.result, daemon=True).start()
         else:
             future.result()
+
