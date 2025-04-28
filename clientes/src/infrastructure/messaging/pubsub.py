@@ -19,7 +19,6 @@ publisher = pubsub_v1.PublisherClient(credentials=credentials)
 subscriber = pubsub_v1.SubscriberClient(credentials=credentials)
 
 project_id = os.getenv("CLOUD_PROJECT_ID")
-topic_id = os.getenv("PRODUCT_TOPIC")
 subscription_id = os.getenv("PEDIDO_SUB")
 
 
