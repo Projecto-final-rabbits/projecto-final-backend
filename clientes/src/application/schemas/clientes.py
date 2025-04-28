@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 
 
+
 # Schemas para ContactoCliente
 class ContactoClienteBase(BaseModel):
     nombre_contacto: str
