@@ -23,17 +23,6 @@ def get_db():
 def crear_detalle(detalle: DetallePedidoCreate, db: Session = Depends(get_db)):
     return repo.guardar(db, detalle)
 
-# @router.get("/", response_model=List[DetallePedidoRead])
-# def listar_detalles(db: Session = Depends(get_db)):
-#     return repo.listar_todos(db)
-
-# @router.get("/{detalle_id}", response_model=DetallePedidoRead)
-# def obtener_detalle(detalle_id: int, db: Session = Depends(get_db)):
-#     detalle = repo.obtener_por_id(db, detalle_id)
-#     if not detalle:
-#         raise HTTPException(status_code=404, detail="Detalle no encontrado")
-#     return detalle
-
 @router.delete("/{detalle_id}")
 def eliminar_detalle(detalle_id: int, db: Session = Depends(get_db)):
     return repo.eliminar(db, detalle_id)
