@@ -20,6 +20,7 @@ def get_db():
 def crear_cliente(cliente: ClienteCreate, db: Session = Depends(get_db)):
     return repo_cliente.guardar(db, cliente)
 
+
 @router.get("/", response_model=List[ClienteRead])
 def listar_clientes(db: Session = Depends(get_db)):
     return repo_cliente.listar_todos(db)

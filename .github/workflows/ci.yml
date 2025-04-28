@@ -314,7 +314,7 @@ jobs:
             --image=us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/final-project/clientes:development \
             --set-env-vars=PEDIDO_SUB=${{ secrets.PEDIDO_SUB }} \
             --set-env-vars=CLOUD_PROJECT_ID=${{ secrets.CLOUD_PROJECT_ID }} \
-            --update-secrets=cloud-key-json=cloud-key-pubsub:latest 
+            --update-secrets=cloud-key-json=cloud-key-pubsub:latest \
             --platform=managed \
             --region=us-central1 \
             --allow-unauthenticated \
