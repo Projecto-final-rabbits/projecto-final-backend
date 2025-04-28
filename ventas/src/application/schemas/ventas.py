@@ -144,3 +144,21 @@ class PlanVentaRead(PlanVentaBase):
 
     class Config:
         from_attributes = True
+
+
+# ------------------------------
+# ResumenVentas
+# ------------------------------
+class VentaProductoItem(BaseModel):
+    nombre: str
+    cantidad_total: int
+    total_ventas: float
+
+    class Config:
+        from_attributes = True
+
+class VentaReporte(BaseModel):
+    cliente_id: int
+    fecha_inicio: date
+    fecha_fin: date
+    detalle: List[VentaProductoItem]

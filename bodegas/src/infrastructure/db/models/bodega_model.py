@@ -1,4 +1,5 @@
 import uuid
+from fastapi import HTTPException
 from sqlalchemy import Column, String, Integer, Float, Date, ForeignKey, Enum, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship

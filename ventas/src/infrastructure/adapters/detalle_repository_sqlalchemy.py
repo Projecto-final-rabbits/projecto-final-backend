@@ -1,3 +1,6 @@
+from datetime import date
+from typing import List, Tuple
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from src.infrastructure.db.models.venta_model import DetallePedido, Pedido, Producto
@@ -28,3 +31,31 @@ class DetallePedidoRepositorySQLAlchemy:
         db.delete(detalle)
         db.commit()
         return {"message": "Detalle eliminado"}
+    
+    def ventas_por_cliente(
+            self,
+            db: Session,
+            cliente_id: int,
+            fecha_inicio: date,
+            fecha_fin: date
+        ) -> List[Tuple[str, int, float]]:
+            """
+            Devuelve una lista de tuplas:
+            (nombre_producto, cantidad_total, total_ventas)
+            """
+            q = (
+                db.query(
+                    Producto.nombre.label("nombre"),
+                    func.sum(DetallePedido.cantidad).label("cantidad_total"),
+                    func.sum(DetallePedido.cantidad * DetallePedido.precio_unitario).label("total_ventas"),
+                )
+                .join(DetallePedido.pedido)          # une con Pedido
+                .join(DetallePedido.producto)        # une con Producto
+                .filter(
+                    Pedido.cliente_id == cliente_id,
+                    Pedido.fecha_envio >= fecha_inicio,
+                    Pedido.fecha_envio <= fecha_fin,
+                )
+                .group_by(Producto.nombre)
+            )
+            return q.all()
