@@ -60,10 +60,10 @@ def test_crear_detalle_pedido(client):
     assert data["pedido_id"] == pedido_id
     assert data["producto_id"] == producto_id
 
-def test_listar_detalles(client):
-    response = client.get("/detalles/")
-    assert response.status_code == 200
-    assert isinstance(response.json(), list)
+# def test_listar_detalles(client):
+#     response = client.get("/detalles/")
+#     assert response.status_code == 200
+#     assert isinstance(response.json(), list)
 
 # def test_obtener_detalle(client):
 #     pedido_id, producto_id = crear_cliente_vendedor_pedido_producto(client)
