@@ -312,6 +312,7 @@ jobs:
           gcloud run deploy clientes \
             --set-env-vars=DATABASE_URL=${{ secrets.DATABASE_URL_CLIENTES }} \
             --image=us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/final-project/clientes:development \
+            --set-env-vars=PEDIDO_SUB=${{ secrets.PEDIDO_SUB }} \
             --platform=managed \
             --region=us-central1 \
             --allow-unauthenticated \
