@@ -1,3 +1,4 @@
+
 from fastapi import APIRouter, Depends, HTTPException
 import httpx
 from sqlalchemy.orm import Session
@@ -7,6 +8,7 @@ from src.config.database import SessionLocal
 from src.infrastructure.adapters.detalle_repository_sqlalchemy import DetallePedidoRepositorySQLAlchemy
 from src.application.schemas.ventas import DetallePedidoConProducto, DetallePedidoCreate, DetallePedidoRead
 from src.application.services.bodega_service import fetch_producto
+
 
 router = APIRouter(prefix="/detalles", tags=["Detalles de Pedido"])
 repo = DetallePedidoRepositorySQLAlchemy()
