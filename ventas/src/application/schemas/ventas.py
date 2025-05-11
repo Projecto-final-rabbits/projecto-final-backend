@@ -162,3 +162,14 @@ class VentaReporte(BaseModel):
     fecha_inicio: date
     fecha_fin: date
     detalle: List[VentaProductoItem]
+    
+class DetallePedidoConProducto(BaseModel):
+    id: int
+    pedido_id: int
+    producto_id: UUID
+    cantidad: int
+    precio_unitario: float
+    producto: ProductoRead   # anida el esquema de producto
+
+    class Config:
+        from_attributes = True
