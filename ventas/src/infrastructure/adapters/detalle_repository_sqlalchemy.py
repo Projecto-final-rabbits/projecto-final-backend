@@ -59,3 +59,14 @@ class DetallePedidoRepositorySQLAlchemy:
                 .group_by(Producto.nombre)
             )
             return q.all()
+        
+    def obtener_por_pedido(self, db: Session, pedido_id: int) -> List[DetallePedido]:
+        """
+        Devuelve todos los DetallePedido asociados a un pedido dado su ID.
+        """
+        return (
+            db
+            .query(DetallePedido)
+            .filter(DetallePedido.pedido_id == pedido_id)
+            .all()
+        )
