@@ -14,7 +14,7 @@ load_dotenv("src/.env")
 
 def build_credentials():
     """Construye las credenciales de GCP dinámicamente."""
-    environment = os.getenv("ENVIRONMENT", "local")  # por defecto 'production'
+    environment = os.getenv("ENVIRONMENT", "production")  # por defecto 'production'
     
     if environment == "local":
         creds_path = os.getenv("GCP_PUBSUB_CREDENTIALS_PATH")
