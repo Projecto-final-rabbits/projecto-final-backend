@@ -31,7 +31,7 @@ class ProductoBase(BaseModel):
     descripcion: Optional[str] = None
     categoria: Optional[str] = None
     proveedor_id: Optional[int] = None
-    precio_compra: float
+    precio_compra: Optional[float] = None
     precio_venta: float
     promocion_activa: Optional[bool] = False
     fecha_vencimiento: Optional[datetime] = None
