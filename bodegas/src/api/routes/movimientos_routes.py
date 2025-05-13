@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from src.application.schemas.bodegas import MovimientoInventarioCreate, MovimientoInventarioRead
-from src.application.services.movimientos_service import registrar_entrada_producto_service
+from src.application.services.movimientos_service import registrar_entrada_producto_service, registrar_salida_producto_service
 from src.infrastructure.adapters.movimiento_repository_sqlalchemy import MovimientoInventarioRepository
 from src.config.database import get_db
 
@@ -17,3 +17,7 @@ def registrar_entrada_producto(movimiento_data: MovimientoInventarioCreate, db: 
 def listar_movimientos(db: Session = Depends(get_db)):
     repo = MovimientoInventarioRepository(db)
     return repo.obtener_todos()
+
+@router.post("/salida", response_model=MovimientoInventarioRead, status_code=status.HTTP_201_CREATED)
+def registrar_salida_producto(movimiento_data: MovimientoInventarioCreate, db: Session = Depends(get_db)):
+    return registrar_salida_producto_service(movimiento_data, db)
