@@ -45,3 +45,38 @@ def registrar_entrada_producto_service(movimiento_data: MovimientoInventarioCrea
     )
 
     return movimiento_repo.crear(nuevo_movimiento)
+
+def registrar_salida_producto_service(movimiento_data: MovimientoInventarioCreate, db: Session):
+    if movimiento_data.tipo_movimiento != TipoMovimiento.salida:
+        raise HTTPException(status_code=400, detail="Este servicio solo admite movimientos de tipo 'salida'")
+
+    if movimiento_data.cantidad <= 0:
+        raise HTTPException(status_code=400, detail="La cantidad debe ser mayor a cero")
+
+    inventario_repo = InventarioRepository(db)
+    movimiento_repo = MovimientoInventarioRepository(db)
+
+    inventario = inventario_repo.obtener_por_producto_y_bodega(
+        producto_id=movimiento_data.producto_id,
+        bodega_id=movimiento_data.bodega_id
+    )
+
+    if not inventario:
+        raise HTTPException(status_code=404, detail="No se encontró el inventario para el producto")
+
+    if inventario.cantidad_disponible < movimiento_data.cantidad:
+        raise HTTPException(status_code=400, detail="Stock insuficiente")
+
+    inventario.cantidad_disponible -= movimiento_data.cantidad
+    inventario_repo.actualizar(inventario)
+
+    nuevo_movimiento = MovimientoInventario(
+        producto_id=movimiento_data.producto_id,
+        bodega_id=movimiento_data.bodega_id,
+        cantidad=movimiento_data.cantidad,
+        tipo_movimiento=TipoMovimiento.salida,
+        descripcion=movimiento_data.descripcion,
+        fecha=movimiento_data.fecha or datetime.now()
+    )
+
+    return movimiento_repo.crear(nuevo_movimiento)
