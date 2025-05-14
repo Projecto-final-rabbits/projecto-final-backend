@@ -14,6 +14,7 @@ from src.api.routes.vendedores_routes import router as vendedores_router
 from src.api.routes.pedidos_routes import router as pedidos_router
 from src.api.routes.detalles_routes import router as detalles_router
 from src.api.routes.planes_venta_routes import router as planes_venta_router
+from src.api.routes.dashboard_routes import router as dashboard_router
 
 from src.config.database import Base, engine
 from src.infrastructure.messaging.pubsub import PubSubSubscriber
@@ -32,6 +33,7 @@ app.include_router(vendedores_router)
 app.include_router(pedidos_router)
 app.include_router(detalles_router)
 app.include_router(planes_venta_router)
+app.include_router(dashboard_router)
 
 # CORS
 app.add_middleware(
