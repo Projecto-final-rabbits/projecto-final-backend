@@ -9,6 +9,7 @@ import enum
 class TipoMovimientoEnum(enum.Enum):
     entrada = "entrada"
     salida = "salida"
+    traslado = "traslado"
 
 class Bodega(Base):
     __tablename__ = 'bodegas'
