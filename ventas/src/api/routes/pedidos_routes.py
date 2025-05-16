@@ -76,6 +76,7 @@ def listar_pedidos(db: Session = Depends(get_db)):
                 vendedor_id=p.vendedor_id,
                 fecha_envio=p.fecha_envio,
                 direccion_entrega=p.direccion_entrega,
+                origen_bodega_id=p.origen_bodega_id,
                 estado=p.estado,
                 productos=productos,
                 total=total,

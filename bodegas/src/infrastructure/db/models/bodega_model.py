@@ -18,6 +18,7 @@ class Bodega(Base):
     nombre = Column(String, nullable=False)
     ciudad = Column(String, nullable=False)
     pais = Column(String, nullable=False)
+    direccion = Column(String, nullable=False)
 
     inventarios = relationship("Inventario", back_populates="bodega")
 

@@ -27,6 +27,7 @@ class ProductoRead(ProductoBase):
 class ProductoCantidad(BaseModel):
     producto_id: UUID  # usa int para mantener consistencia con PK de la tabla productos
     cantidad: int = Field(gt=0)
+
 # ------------------------------
 # Cliente
 # ------------------------------
@@ -73,19 +74,15 @@ class VendedorRead(VendedorBase):
 class PedidoBase(BaseModel):
     cliente_id: int
     vendedor_id: int
+    origen_bodega_id: Optional[int] = None  
     fecha_envio: date
     direccion_entrega: str
-    productos: List[ProductoCantidad]=[]
+    productos: List[ProductoCantidad] = []
     estado: Optional[str] = "pendiente"
-    total: Optional[float] 
+    total: Optional[float]
 
 class PedidoCreate(PedidoBase):
-    cliente_id: int
-    vendedor_id: int
-    fecha_envio: date
-    direccion_entrega: str
-    productos: List[ProductoCantidad]=[]
-    estado: Optional[str] = "pendiente"
+    pass  # hereda todos los campos incluyendo origen_bodega_id
 
 class PedidoRead(PedidoBase):
     id: int
@@ -112,8 +109,6 @@ class DetallePedidoRead(DetallePedidoBase):
     class Config:
         from_attributes = True
 
-# — aquí van tus esquemas existentes de ProductoRead y DetallePedidoRead —
-
 class DetallePedidoConProducto(BaseModel):
     id: int
     pedido_id: int
@@ -135,9 +130,8 @@ class PlanVentaBase(BaseModel):
     cuota: int
     periodo: str
 
-class PlanVentaCreate(PlanVentaBase): 
+class PlanVentaCreate(PlanVentaBase):
     pass
-
 
 class PlanVentaRead(PlanVentaBase):
     id: int
@@ -145,10 +139,22 @@ class PlanVentaRead(PlanVentaBase):
     class Config:
         from_attributes = True
 
+# ------------------------------
+# Esquema para rutas (origen y destino)
+# ------------------------------
+
+class DireccionesPedido(BaseModel):
+    pedido_id: int
+    origen: str
+    destino: str
+
+    class Config:
+        from_attributes = True
 
 # ------------------------------
 # ResumenVentas
 # ------------------------------
+
 class VentaProductoItem(BaseModel):
     nombre: str
     cantidad_total: int
@@ -162,14 +168,3 @@ class VentaReporte(BaseModel):
     fecha_inicio: date
     fecha_fin: date
     detalle: List[VentaProductoItem]
-    
-class DetallePedidoConProducto(BaseModel):
-    id: int
-    pedido_id: int
-    producto_id: UUID
-    cantidad: int
-    precio_unitario: float
-    producto: ProductoRead   # anida el esquema de producto
-
-    class Config:
-        from_attributes = True
