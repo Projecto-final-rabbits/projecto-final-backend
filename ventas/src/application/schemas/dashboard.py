@@ -27,4 +27,4 @@ class SalesSummaryRead(BaseModel):
     ventas_por_ciudad: Dict[str, float] = Field(..., description="Ingresos totales agrupados por ciudad de entrega")
 
     class Config:
-        orm_mode = True
+        from_attributes = True

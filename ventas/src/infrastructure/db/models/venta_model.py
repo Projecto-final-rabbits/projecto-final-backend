@@ -54,6 +54,7 @@ class Pedido(Base):
     fecha_envio = Column(Date, nullable=False)
     direccion_entrega = Column(String, nullable=False)
     estado = Column(String, nullable=False, default="pendiente")
+    origen_bodega_id = Column(Integer, nullable=False, default=1)
 
     cliente = relationship("Cliente", back_populates="pedidos")
     vendedor = relationship("Vendedor", back_populates="pedidos")

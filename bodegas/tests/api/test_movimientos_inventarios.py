@@ -12,7 +12,8 @@ def bodega(client):
     response = client.post("/bodegas/", json={
         "nombre": "Bodega Test",
         "ciudad": "Ciudad Test",
-        "pais": "País Test"
+        "pais": "País Test",
+        "direccion": "Dirección Test"
     })
     return response.json()["id"]
 

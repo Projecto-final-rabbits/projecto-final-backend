@@ -12,6 +12,7 @@ class BodegaBase(BaseModel):
     nombre: str
     ciudad: str
     pais: str
+    direccion: str
 
 class BodegaCreate(BodegaBase):
     pass
