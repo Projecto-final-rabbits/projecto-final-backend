@@ -11,6 +11,8 @@ from src.application.schemas.ventas import PedidoCreate, PedidoRead, ProductoCan
 from src.application.services.clientes_service import cliente_existe
 from src.application.services.crear_pedido_detalle_service import CrearPedidoConDetalleService
 from src.application.services.bodega_service import producto_en_stock
+from src.application.schemas.ruta import DireccionesPedido
+from src.application.services.pedidos_service import obtener_direcciones_pedido_service
 
 router = APIRouter(prefix="/pedidos", tags=["Pedidos"])
 
@@ -76,6 +78,7 @@ def listar_pedidos(db: Session = Depends(get_db)):
                 vendedor_id=p.vendedor_id,
                 fecha_envio=p.fecha_envio,
                 direccion_entrega=p.direccion_entrega,
+                origen_bodega_id=p.origen_bodega_id,
                 estado=p.estado,
                 productos=productos,
                 total=total,
@@ -129,3 +132,7 @@ def eliminar_pedido(
     repo = PedidoRepositorySQLAlchemy(db)
     repo.eliminar(pedido_id)
     return
+
+@router.get("/{pedido_id}/direcciones", response_model=DireccionesPedido)
+def get_pedido_direcciones(pedido_id: int, db: Session = Depends(get_db)):
+    return obtener_direcciones_pedido_service(pedido_id, db)

@@ -16,7 +16,7 @@ if not json_str:
 service_account_info = json.loads(json_str)
 credentials = service_account.Credentials.from_service_account_info(service_account_info)
 
-# credentials = service_account.Credentials.from_service_account_file("src/cloud-key.json")
+#credentials = service_account.Credentials.from_service_account_file("src/cloud-key.json")
 publisher = pubsub_v1.PublisherClient(credentials=credentials)
 subscriber = pubsub_v1.SubscriberClient(credentials=credentials)
 

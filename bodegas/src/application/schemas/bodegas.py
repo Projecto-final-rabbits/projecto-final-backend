@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 from typing import Optional
 from uuid import UUID
 from datetime import datetime
@@ -12,6 +12,7 @@ class BodegaBase(BaseModel):
     nombre: str
     ciudad: str
     pais: str
+    direccion: str
 
 class BodegaCreate(BodegaBase):
     pass
@@ -31,7 +32,7 @@ class ProductoBase(BaseModel):
     descripcion: Optional[str] = None
     categoria: Optional[str] = None
     proveedor_id: Optional[int] = None
-    precio_compra: float
+    precio_compra: Optional[float] = None
     precio_venta: float
     promocion_activa: Optional[bool] = False
     fecha_vencimiento: Optional[datetime] = None
@@ -74,6 +75,7 @@ class InventarioRead(InventarioBase):
 class TipoMovimiento(str, Enum):
     entrada = "entrada"
     salida = "salida"
+    traslado = "traslado"
 
 class MovimientoInventarioBase(BaseModel):
     producto_id: UUID
@@ -106,3 +108,25 @@ class ProductoUpdate(BaseModel):
     fecha_vencimiento: Optional[datetime] = None
     condicion_almacenamiento: Optional[str] = None
     tiempo_entrega_dias: Optional[int] = None
+
+
+# ------------------------------
+# TrasladoInventario
+# ------------------------------
+
+class TrasladoInventarioCreate(BaseModel):
+    producto_id: UUID
+    origen_bodega_id: int
+    destino_bodega_id: int
+    cantidad: int = Field(..., gt=0, description="Debe ser mayor a cero")
+    descripcion: Optional[str] = None
+    fecha: Optional[datetime] = None
+
+    @validator("destino_bodega_id")
+    def origen_destino_distintos(cls, v, values):
+        if "origen_bodega_id" in values and v == values["origen_bodega_id"]:
+            raise ValueError("La bodega destino debe ser diferente a la bodega origen")
+        return v
+
+    class Config:
+        from_attributes = True

@@ -75,3 +75,35 @@ def obtener_detalle_con_producto(detalle_id: int, db: Session = Depends(get_db))
         precio_unitario=det.precio_unitario,
         producto=producto
     )
+    
+@router.get(
+    "/pedidos/{pedido_id}",
+    response_model=List[DetallePedidoConProducto],
+    summary="Detalles de un pedido con info de producto"
+)
+def listar_detalles_por_pedido(
+    pedido_id: int,
+    db: Session = Depends(get_db)
+):
+    detalles = repo.obtener_por_pedido(db, pedido_id)
+    if not detalles:
+        raise HTTPException(status_code=404, detail="No se encontraron detalles para este pedido")
+
+    salida: List[DetallePedidoConProducto] = []
+    for det in detalles:
+        try:
+            producto = fetch_producto(det.producto_id)
+        except httpx.HTTPStatusError:
+            raise HTTPException(502, detail=f"Error al obtener producto {det.producto_id}")
+
+        salida.append(
+            DetallePedidoConProducto(
+                id=det.id,
+                pedido_id=det.pedido_id,
+                producto_id=det.producto_id,
+                cantidad=det.cantidad,
+                precio_unitario=det.precio_unitario,
+                producto=producto
+            )
+        )
+    return salida
